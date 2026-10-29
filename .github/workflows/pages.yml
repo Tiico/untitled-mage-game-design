@@ -1,0 +1,42 @@
+name: Publish fusion simulator
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: fusion-simulator-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/configure-pages@v6.0.0
+      - name: Stage only public simulator assets
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/fusion-simulator"
+          for asset in index.html style.css app.mjs catalog.mjs model.mjs analysis.mjs; do
+            cp "$asset" "$RUNNER_TEMP/fusion-simulator/"
+          done
+          touch "$RUNNER_TEMP/fusion-simulator/.nojekyll"
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: ${{ runner.temp }}/fusion-simulator
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1

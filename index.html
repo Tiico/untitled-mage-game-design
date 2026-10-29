@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Spellforge · Fusion structure simulator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <div class="intro"><div class="eyebrow">Untitled Mage Game / Product owner workspace</div><h1>Spellforge <span style="color:var(--accent)">/</span> Fusion atlas</h1><p>Can six base spells and six fusions form a readable, reachable progression? Explore a proposed map, then forge to discover recipes. Living fusion structure simulator · PRD v1.2.</p></div>
+        <div class="edition">FUSION SIMULATOR<br><span class="muted"><span id="catalog-version"></span></span></div>
+    </header>
+    <main>
+        <div class="topline"><div class="tabs" role="tablist" aria-label="Guided walkthroughs" id="tabs"></div><div class="mode" aria-label="Map visibility"><button id="design-mode" aria-pressed="true">Designer map</button><button id="player-mode" aria-pressed="false">Player discovery</button></div></div>
+        <section class="scenario" id="scenario"></section>
+        <section class="progress" id="progress" aria-label="Realm progression"></section>
+        <section class="panel" id="analysis" aria-label="Fusion structure analysis"></section>
+        <div class="workspace">
+            <section class="atlas" aria-label="Spell fusion map">
+                <div class="atlas-heading"><div><div class="eyebrow">The collection, connected</div><h2 id="map-title">Six roots. Six discoveries.</h2><p id="map-subtitle"></p></div><button class="small" id="show-all">Show all connections</button></div>
+                <div class="legend"><span><i></i>Unlocked</span><span><i class="locked"></i>Not unlocked</span><span><i class="proposal"></i>Proposal</span><span>Click a spell to trace its ingredients</span></div>
+                <div class="map-scroll"><div class="map" id="map"></div></div>
+                <div class="map-note" id="map-note"></div>
+            </section>
+            <aside><section class="panel" id="inspector"></section><section class="panel"><div class="eyebrow">PRD guardrails</div><p>Spells stay in your library. No spell levels, XP or mana.</p><p>Fusion is a permanent upgrade. Invalid pairs cost nothing. A valid attempt crafts immediately.</p><p>Recipes remain hidden in player view until crafted. Designer view deliberately reveals the proposal.</p><p>Boss victories here are explicit simulation controls; combat and balance are not simulated.</p></section></aside>
+        </div>
+        <section class="state" id="state" aria-label="Current simulation state"></section>
+        <div id="notice" role="status" aria-live="polite"></div>
+        <div class="bottom">
+            <section class="panel"><div class="eyebrow">Free play / Spellforge</div><h2>Try a pair</h2><p>Choose two unlocked spells. The attempt itself discovers and crafts a valid recipe; there is no free result preview.</p><div class="ingredients"><label>First ingredient<select id="ingredient-a" aria-label="First ingredient"></select></label><span>+</span><label>Second ingredient<select id="ingredient-b" aria-label="Second ingredient"></select></label></div><button class="primary" id="forge">Attempt fusion</button><p>Simulation economy: each fusion costs 30 essence. Essence and all non-intro costs are proposals.</p><div class="actions"><button id="upgrade">Upgrade forge</button><button id="boss">Simulate next boss victory</button><button id="farm">Collect 5 shards</button></div><p id="farm-note"></p><div id="craft-actions" class="actions"></div></section>
+            <section class="panel"><div class="eyebrow">Visible state / Audit trail</div><h2>Your library</h2><p id="library"></p><p id="resources"></p><p id="discoveries"></p><h3 style="margin-top:16px">Recent actions</h3><ol class="log" id="log"></ol><button class="small" id="reset">Reset this scenario</button></section>
+        </div>
+        <details open id="design-questions"><summary>Design questions to discuss</summary><div class="discussion"><div><h3>01 / Replacement pressure</h3><p>Five first-step fusions compete for four loadout slots. Should every branch have a clear role, or is the pleasure mainly collecting stronger spells? This prototype does not assign damage or prove balance.</p></div><div><h3>02 / Chain concentration</h3><p>Tempest Crown depends on Frostfire Bolt and Hailstorm, giving Fire, Ice and Wind a shared payoff. Earth has no second-step payoff yet. Is that asymmetry interesting or disappointing?</p></div><div><h3>03 / Discovery friction</h3><p>Twelve spells give 66 different unordered pairs, but only six recipes. With no result preview, how will players get useful clues? Hints, exact reveal rules and duplicate-forge behavior need decisions.</p></div></div></details>
+        <footer>Source: PRD §§3–7, 11–14 · AC-02, 04, 05, 11–13. Only Firebolt, Icebolt and the Frostfire recipe are named in the PRD. All other names, roles, shard assignments, later forge gates and economy values are proposals. State is memory-only; reload resets it. This structure simulator does not prove combat balance. Maintained alongside spell and progression changes.</footer>
+    </main>
+    <script type="module" src="./app.mjs"></script>
+</body>
+</html>
