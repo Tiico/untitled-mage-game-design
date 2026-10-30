@@ -1,4 +1,4 @@
-import { metadata, spells, realms, withConeProposal } from './catalog.mjs';
+import { metadata, spells, realms, withConeProposal, withShieldProposal } from './catalog.mjs';
 import { analyzeCatalog } from './analysis.mjs';
 import { normalizeWorkspace, workspaceDocument, layoutCatalog } from './model.mjs';
 
@@ -30,6 +30,9 @@ const find = id => catalog.find(spell => spell.id === id);
 const decision = spell => spell.draft ? 'Local draft' : spell.known ? 'PRD decision' : 'Catalog proposal';
 const badge = spell => `<span class="tag ${spell.draft?'draft':spell.known?'approved':''}">${decision(spell)}</span>`;
 function sprite(name) {
+    if(name==='ward'||name==='fire-shield')return `<span class="shield-pixel-icon">${sprite('ice')}${name==='fire-shield'?`<span class="fire-overlay">${sprite('fire')}</span>`:''}</span>`;
+    if(name==='arcane-surge')return `<span class="surge-pixel-icon">${sprite('frostfire')}</span>`;
+
     if(name==='flame-cone'||name==='frostfire-cone')return `<span class="cone-pixel-icon">${[-28,0,28].map(angle=>`<span style="--ray:${angle}deg">${sprite(name==='flame-cone'?'fire':'frostfire')}</span>`).join('')}</span>`;
     const rect = {fire:[18,1016,289,235],ice:[338,1007,309,242],frostfire:[666,1008,287,243]}[name];
     if (!rect) return '';
@@ -236,7 +239,10 @@ $('import-file').onchange = async event => {
     event.target.value = '';
 };
 $('cone-proposal').onclick=()=>{try{const next=withConeProposal(catalog);if(applyCatalog(next)){selected='frostfire-cone';milestone=3;view='map';render();notify('PO swarm proposal added as local drafts. Existing drafts and the shared 6 + 6 catalog were kept.');}}catch(error){notify(error.message,true);}};
+$('shield-proposal').onclick=()=>{try{const next=withShieldProposal(catalog);if(applyCatalog(next)){selected='fire-shield';milestone=2;view='map';render();notify('Shield and buff proposal added as local drafts. Frost Ward is reused; existing drafts and the shared 6 + 6 catalog were kept.');}}catch(error){notify(error.message,true);}};
 $('catalog-version').textContent = `CATALOG ${metadata.version}`;
 render();
 if (startupNotice) notify(startupNotice,true);
 else if(query.get('proposal')==='swarm-cone')notify('PO proposal: Frostfire Bolt + a cone-shaped spell → Frostfire Cone. Use “Add swarm proposal” to explore it as local drafts; your current workspace is kept.');
+
+if(query.get('proposal')==='shield-buff'&&!startupNotice)notify('PO proposal: temporary buffs and Frost Ward + Firebolt → Fire Shield. Use “Add shield proposal” to explore local drafts; your saved workspace is kept.');
