@@ -3,37 +3,55 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Spellforge · Fusion structure simulator</title>
+    <title>Spellforge · Spell design workspace</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <header>
-        <div class="intro"><div class="eyebrow">Untitled Mage Game / Product owner workspace</div><h1>Spellforge <span style="color:var(--accent)">/</span> Fusion atlas</h1><p>Can six base spells and six fusions form a readable, reachable progression? Explore a proposed map, then forge to discover recipes. Living fusion structure simulator · PRD v1.2.</p></div>
-        <div class="edition">FUSION SIMULATOR<br><span class="muted"><span id="catalog-version"></span></span></div>
+    <header class="app-header">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">✧</span><div><span class="eyebrow">Untitled Mage Game / Design tools</span><h1>Spellforge <span>workshop</span></h1></div></div>
+        <div class="header-actions"><span id="catalog-version" class="version"></span><button id="import">Import workspace</button><button id="export">Export workspace</button><button id="new-spell" class="primary">+ New spell</button></div>
     </header>
     <main>
-        <div class="topline"><div class="tabs" role="tablist" aria-label="Guided walkthroughs" id="tabs"></div><div class="mode" aria-label="Map visibility"><button id="design-mode" aria-pressed="true">Designer map</button><button id="player-mode" aria-pressed="false">Player discovery</button></div></div>
-        <section class="scenario" id="scenario"></section>
-        <section class="progress" id="progress" aria-label="Realm progression"></section>
-        <section class="panel" id="analysis" aria-label="Fusion structure analysis"></section>
-        <div class="workspace">
-            <section class="atlas" aria-label="Spell fusion map">
-                <div class="atlas-heading"><div><div class="eyebrow">The collection, connected</div><h2 id="map-title">Six roots. Six discoveries.</h2><p id="map-subtitle"></p></div><button class="small" id="show-all">Show all connections</button></div>
-                <div class="legend"><span><i></i>Unlocked</span><span><i class="locked"></i>Not unlocked</span><span><i class="proposal"></i>Proposal</span><span>Click a spell to trace its ingredients</span></div>
-                <div class="map-scroll"><div class="map" id="map"></div></div>
-                <div class="map-note" id="map-note"></div>
-            </section>
-            <aside><section class="panel" id="inspector"></section><section class="panel"><div class="eyebrow">PRD guardrails</div><p>Spells stay in your library. No spell levels, XP or mana.</p><p>Fusion is a permanent upgrade. Invalid pairs cost nothing. A valid attempt crafts immediately.</p><p>Recipes remain hidden in player view until crafted. Designer view deliberately reveals the proposal.</p><p>Boss victories here are explicit simulation controls; combat and balance are not simulated.</p></section></aside>
-        </div>
-        <section class="state" id="state" aria-label="Current simulation state"></section>
+        <section class="intro"><div><span class="eyebrow">The spell designer’s workbench</span><h2>A little magic. Every connection.</h2><p>Explore the catalog, trace a fusion, or build your next spell.</p></div><div class="workspace-status"><span id="save-state"></span><button id="reset" class="text-button">Reset local drafts</button></div></section>
         <div id="notice" role="status" aria-live="polite"></div>
-        <div class="bottom">
-            <section class="panel"><div class="eyebrow">Free play / Spellforge</div><h2>Try a pair</h2><p>Choose two unlocked spells. The attempt itself discovers and crafts a valid recipe; there is no free result preview.</p><div class="ingredients"><label>First ingredient<select id="ingredient-a" aria-label="First ingredient"></select></label><span>+</span><label>Second ingredient<select id="ingredient-b" aria-label="Second ingredient"></select></label></div><button class="primary" id="forge">Attempt fusion</button><p>Simulation economy: each fusion costs 30 essence. Essence and all non-intro costs are proposals.</p><div class="actions"><button id="upgrade">Upgrade forge</button><button id="boss">Simulate next boss victory</button><button id="farm">Collect 5 shards</button></div><p id="farm-note"></p><div id="craft-actions" class="actions"></div></section>
-            <section class="panel"><div class="eyebrow">Visible state / Audit trail</div><h2>Your library</h2><p id="library"></p><p id="resources"></p><p id="discoveries"></p><h3 style="margin-top:16px">Recent actions</h3><ol class="log" id="log"></ol><button class="small" id="reset">Reset this scenario</button></section>
+        <div class="workspace">
+            <aside class="panel library-panel" aria-label="Spell library">
+                <div class="panel-heading"><h2>Spell library</h2><span id="spell-count" class="count"></span></div>
+                <label class="search-label">Find a spell<input id="search" type="search" placeholder="Search names or effects…"></label>
+                <label class="filter-label">Show<select id="library-filter"><option value="all">All spells</option><option value="base">Base spells</option><option value="fusion">Fusions</option><option value="draft">Local drafts</option><option value="known">PRD decisions</option></select></label>
+                <div id="library"></div>
+                <div class="library-key"><span><i class="key-dot approved"></i>PRD decision</span><span><i class="key-dot"></i>Catalog proposal</span><span><i class="key-dot draft"></i>Local draft</span></div>
+            </aside>
+            <section class="canvas-column" aria-label="Spell connections">
+                <section class="panel atlas">
+                    <div class="atlas-heading"><div><span class="eyebrow">Ingredients → result → next fusion</span><h2>Fusion atlas</h2></div><div class="view-switch" aria-label="Connection view"><button id="map-view" aria-pressed="true">Map</button><button id="table-view" aria-pressed="false">Recipes</button></div></div>
+                    <div class="atlas-toolbar"><label>Availability<select id="milestone"><option value="4">Full catalog / after Wind</option><option value="0">Before Fire boss</option><option value="1">Before Ice boss</option><option value="2">Before Earth boss</option><option value="3">Before Wind boss</option></select></label><button id="clear-trace" class="text-button">Clear selection</button></div>
+                    <div class="map-scroll" id="map-scroll" tabindex="0" aria-label="Fusion map; scroll horizontally to explore"><div class="map" id="map"></div></div>
+                    <div id="recipes" class="table-scroll" hidden></div>
+                    <div class="map-caption"><span id="availability-summary"></span><span>Click a spell to trace its ingredients. Scroll the map sideways.</span></div>
+                </section>
+                <section class="panel bench" aria-label="Combination bench"><div><span class="eyebrow">Explore a pair</span><h2>Combination bench</h2><p>Look up a recipe or use a new pair as a starting point.</p></div><div class="pair"><label>First ingredient<select id="ingredient-a"></select></label><span aria-hidden="true">+</span><label>Second ingredient<select id="ingredient-b"></select></label></div><div id="pair-result"></div></section>
+                <details class="panel analysis"><summary><span id="analysis-summary"></span><span class="muted">Structure checks</span></summary><div id="analysis-detail"></div></details>
+            </section>
+            <aside class="panel inspector" id="inspector" aria-label="Spell details"></aside>
         </div>
-        <details open id="design-questions"><summary>Design questions to discuss</summary><div class="discussion"><div><h3>01 / Replacement pressure</h3><p>Five first-step fusions compete for four loadout slots. Should every branch have a clear role, or is the pleasure mainly collecting stronger spells? This prototype does not assign damage or prove balance.</p></div><div><h3>02 / Chain concentration</h3><p>Tempest Crown depends on Frostfire Bolt and Hailstorm, giving Fire, Ice and Wind a shared payoff. Earth has no second-step payoff yet. Is that asymmetry interesting or disappointing?</p></div><div><h3>03 / Discovery friction</h3><p>Twelve spells give 66 different unordered pairs, but only six recipes. With no result preview, how will players get useful clues? Hints, exact reveal rules and duplicate-forge behavior need decisions.</p></div></div></details>
-        <footer>Source: PRD §§3–7, 11–14 · AC-02, 04, 05, 11–13. Only Firebolt, Icebolt and the Frostfire recipe are named in the PRD. All other names, roles, shard assignments, later forge gates and economy values are proposals. State is memory-only; reload resets it. This structure simulator does not prove combat balance. Maintained alongside spell and progression changes.</footer>
+        <footer><p>Design workspace · All recipes are visible here. The game’s discovery rules still apply in the game.</p><p>PRD v1.2: Firebolt, Icebolt and the Frostfire recipe are named decisions. Other catalog content, later forge gates and costs are proposals. Local drafts do not change the shared catalog. Availability checks ingredients and gates with unlimited materials; combat, timing and balance are not simulated.</p><a href="https://tiico.github.io/untitled-mage-game-design/prototypes/ui-pixel-idle-v1/?variant=A&art=pixel" target="_blank" rel="noreferrer">Visual reference: ui-pixel-idle-v1 ↗</a></footer>
     </main>
+    <dialog id="editor" aria-labelledby="editor-title">
+        <form id="spell-form">
+            <div class="dialog-heading"><div><span class="eyebrow">Local content draft</span><h2 id="editor-title">New spell</h2></div><button type="button" id="close-editor" aria-label="Close spell editor">×</button></div>
+            <p id="editor-note">Drafts are saved in this browser. Export a workspace to share your ideas.</p>
+            <div class="form-grid"><label>Spell name<input name="name" required maxlength="80"></label><label>Stable ID<input name="id" required pattern="[a-z][a-z0-9-]*" maxlength="48" placeholder="e.g. thunder-bloom"></label><label>Spell type<select name="kind"><option value="base">Base spell</option><option value="fusion">Fusion</option></select></label><label>Forge requirement<select name="level"><option value="0">0 · Starting spell</option><option value="1">1 · After Fire boss</option><option value="2">2 · After Ice boss</option><option value="3">3 · After Earth boss (proposal)</option></select></label></div>
+            <div id="base-fields" class="form-grid"><label>Shard realm<select name="realm"><option value="0">Fire</option><option value="1">Ice</option><option value="2">Earth</option><option value="3">Wind</option></select></label><label>Shard cost<input name="cost" type="number" min="0" max="1000000" step="1" value="10" required></label></div>
+            <div id="fusion-fields" class="form-grid" hidden><label>Ingredient A<select name="inputA"></select></label><label>Ingredient B<select name="inputB"></select></label></div>
+            <label>Effect / design intent<textarea name="role" rows="3" maxlength="600" required placeholder="What does this spell add to the collection?"></textarea></label>
+            <div class="form-grid"><label>Accent color<input name="color" type="color" value="#c5b4e3"></label><label>Map symbol<input name="symbol" maxlength="4" value="✧" required></label></div>
+            <p class="form-error" id="form-error" role="alert"></p>
+            <div class="dialog-actions"><button type="button" id="cancel-editor">Cancel</button><button class="primary" type="submit">Save draft</button></div>
+        </form>
+    </dialog>
+    <dialog id="reset-dialog" aria-labelledby="reset-title"><h2 id="reset-title">Reset local drafts?</h2><p>Your browser workspace will return to the shared catalog. Export first to keep a copy.</p><div class="dialog-actions"><button id="cancel-reset">Keep drafts</button><button id="confirm-reset" class="primary">Reset drafts</button></div></dialog>
+    <input type="file" id="import-file" accept="application/json,.json" hidden>
     <script type="module" src="./app.mjs"></script>
 </body>
 </html>

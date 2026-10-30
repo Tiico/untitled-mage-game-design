@@ -1,4 +1,4 @@
-import { realms, spells, rules } from './catalog.mjs';
+import { realms, spells, rules, metadata } from './catalog.mjs';
 
 // Portable, pure simulation model. No DOM, time, persistence or randomness.
 const FusionModel = (() => {
@@ -61,3 +61,78 @@ const FusionModel = (() => {
 })();
 
 export default FusionModel;
+
+// Content design drafts are independent of simulated player progression above.
+// Normalize all imported/browser data before it reaches rendering or analysis.
+export function normalizeWorkspace(value) {
+    if (!value || value.schemaVersion !== 1 || !Array.isArray(value.spells) ||
+        value.spells.length < spells.length || value.spells.length > 100) {
+        throw new Error('Expected a version 1 workspace with the shared catalog and at most 100 spells.');
+    }
+    const catalog = value.spells.map(source => {
+        if (!source || typeof source !== 'object' || typeof source.id !== 'string' ||
+            !/^[a-z][a-z0-9-]{0,47}$/.test(source.id)) throw new Error('Spell IDs must be unique lowercase names, up to 48 characters.');
+        for (const [field, max] of [['name',80], ['role',600], ['symbol',4]]) {
+            if (typeof source[field] !== 'string' || !source[field].trim() || source[field].length > max) {
+                throw new Error(`Invalid ${field} for ${source.id} (1–${max} characters required).`);
+            }
+        }
+        if (typeof source.color !== 'string' || !/^#[0-9a-f]{6}$/i.test(source.color)) {
+            throw new Error(`Invalid accent color for ${source.id}.`);
+        }
+        if (!Number.isInteger(source.level) || source.level < 0 || source.level > 3) {
+            throw new Error(`Forge requirement for ${source.id} must be between 0 and 3.`);
+        }
+        const spell = {id:source.id,name:source.name.trim(),role:source.role.trim(),symbol:source.symbol.trim(),
+            color:source.color,level:source.level};
+        if (source.inputs !== undefined) {
+            if (!Array.isArray(source.inputs) || source.inputs.length !== 2 ||
+                source.inputs.some(id => typeof id !== 'string')) throw new Error(`A fusion needs two ingredients: ${source.id}.`);
+            spell.inputs = [...source.inputs];
+        } else {
+            if (!Number.isInteger(source.realm) || source.realm < 0 || source.realm > 3 ||
+                !Number.isInteger(source.cost) || source.cost < 0 || source.cost > 1000000) {
+                throw new Error(`Invalid shard realm or cost for ${source.id}.`);
+            }
+            Object.assign(spell, {realm:source.realm,cost:source.cost});
+        }
+        const original = spells.find(item => item.id === spell.id);
+        const fields = ['name','role','symbol','color','level','realm','cost'];
+        const unchanged = original && fields.every(key => original[key] === spell[key]) &&
+            JSON.stringify(original.inputs) === JSON.stringify(spell.inputs);
+        spell.draft = !unchanged;
+        spell.known = !!(unchanged && original.known);
+        return spell;
+    });
+    for (const original of spells) {
+        if (!catalog.some(spell => spell.id === original.id)) throw new Error(`Workspace must retain shared spell ${original.id}.`);
+    }
+    return catalog;
+}
+
+export function workspaceDocument(catalog) {
+    return {schemaVersion:1, sourceCatalogVersion:metadata.version, spells:catalog};
+}
+
+export function layoutCatalog(catalog) {
+    const byId = new Map(catalog.map(spell => [spell.id,spell]));
+    const depths = new Map();
+    function depth(id, path = new Set()) {
+        if (depths.has(id)) return depths.get(id);
+        if (path.has(id) || !byId.has(id)) return 0;
+        const nextPath = new Set(path).add(id);
+        const inputs = byId.get(id).inputs;
+        const value = inputs ? 1 + Math.max(...inputs.map(input => depth(input,nextPath))) : 0;
+        depths.set(id,value);
+        return value;
+    }
+    const counts = new Map();
+    const nodes = catalog.map(spell => {
+        const column = depth(spell.id);
+        const row = counts.get(column) || 0;
+        counts.set(column,row + 1);
+        return {...spell,x:116 + column * 240,y:93 + row * 96,column};
+    });
+    return {nodes,width:Math.max(720,Math.max(...nodes.map(spell => spell.x)) + 120),
+        height:Math.max(360, Math.max(...counts.values()) * 96 + 52),columns:counts.size};
+}

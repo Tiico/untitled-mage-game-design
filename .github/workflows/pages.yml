@@ -33,6 +33,8 @@ jobs:
           for asset in index.html style.css app.mjs catalog.mjs model.mjs analysis.mjs; do
             cp "$asset" "$RUNNER_TEMP/design-pages/"
           done
+          mkdir -p "$RUNNER_TEMP/design-pages/assets"
+          cp assets/fantasy-pixel-atlas.png "$RUNNER_TEMP/design-pages/assets/"
           if [ -d prototypes ]; then
             cp -R prototypes "$RUNNER_TEMP/design-pages/prototypes"
           fi

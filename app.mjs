@@ -1,134 +1,239 @@
-import M from './model.mjs';
-import { metadata, rules } from './catalog.mjs';
+import { metadata, spells, realms } from './catalog.mjs';
 import { analyzeCatalog } from './analysis.mjs';
+import { normalizeWorkspace, workspaceDocument, layoutCatalog } from './model.mjs';
+
 const $ = id => document.getElementById(id);
-let scenario = 'intro', step = 0, mode = 'design', selected = '';
-let state = M.fresh();
-let choiceA = 'fire', choiceB = '';
-let analysisStage = 3;
-const analysis = analyzeCatalog(M.spells);
-const stageNames = ['Before Fire boss', 'Before Ice boss', 'Before Earth boss', 'Before Wind boss', 'After Wind boss'];
-const scenarios = {
-    intro:{name:'01 · First fusion',title:'From Firebolt to Frostfire',description:'Follow the PRD introduction: Fire boss → 5 ice shards → Icebolt → Ice boss → upgrade → fusion. The first fusion never gates its own boss.',steps:[
-        ['Simulate Fire boss victory',{type:'boss'}],['Collect 5 ice shards',{type:'farm',realm:1}],['Craft Icebolt · 5 shards',{type:'craft',id:'ice'}],['Simulate Ice boss victory',{type:'boss'}],['Upgrade forge to level 2',{type:'upgrade'}],['Forge Firebolt + Icebolt',{type:'fuse',a:'fire',b:'ice'}]
-    ]},
-    chain:{name:'02 · Multi-step chain',title:'A fusion can become an ingredient',description:'A deliberately generous setup isolates the proposed chain. Wind shards are reachable after Earth; forge 3 is a proposal. Craft two fusions, then combine them.',steps:[
-        ['Forge Firebolt + Icebolt',{type:'fuse',a:'fire',b:'ice'}],['Forge Icebolt + Gale Blade',{type:'fuse',a:'ice',b:'gale'}],['Forge Frostfire Bolt + Hailstorm',{type:'fuse',a:'frostfire',b:'hail'}]
-    ]},
-    invalid:{name:'03 · Invalid & repeated',title:'What should a failed attempt cost?',description:'Try an invalid pair, a valid pair, then the same recipe reversed. Compare the essence and library after every step. Reverse order uses the same recipe (proposal).',steps:[
-        ['Try Stone Spike + Gale Blade',{type:'fuse',a:'stone',b:'gale'}],['Forge Firebolt + Icebolt',{type:'fuse',a:'fire',b:'ice'}],['Repeat Icebolt + Firebolt',{type:'fuse',a:'ice',b:'fire'}]
-    ]},
-    free:{name:'04 · Free exploration',title:'Build your own route',description:'Starts at the beginning. Use the controls below the atlas to simulate victories, collect shards, craft base spells and attempt recipes. No state is saved.',steps:[]}
-};
-function dispatch(action) {
-    state = M.reduce(state,action);
-    if(action.type==='fuse') { choiceA=action.a; choiceB=action.b; }
-    if(!state.error && action.type==='fuse') selected = state.discovered.at(-1) || selected;
-    render();
+const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const storageKey = 'spellforge-design-workspace-v1';
+const stageNames = ['Before Fire boss','Before Ice boss','Before Earth boss','Before Wind boss','After Wind boss'];
+const query = new URLSearchParams(location.search);
+let selected = query.get('spell') || '';
+let milestone = /^[0-4]$/.test(query.get('stage')) ? Number(query.get('stage')) : 4;
+let view = query.get('view') === 'recipes' ? 'recipes' : 'map';
+let catalog = normalizeWorkspace(workspaceDocument(spells));
+let analysis, choiceA = 'fire', choiceB = 'ice', editingId = null;
+let storageAvailable = true;
+let startupNotice = '';
+try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+        const imported = normalizeWorkspace(JSON.parse(saved));
+        const report = analyzeCatalog(imported);
+        if (report.issues.length) throw new Error(report.issues.join(' '));
+        catalog = imported;
+    }
+} catch (error) {
+    startupNotice = `Could not restore browser drafts: ${error.message} Import an exported workspace to recover them.`;
+    storageAvailable = false;
 }
-function start(name) { scenario=name;step=0;state=M.preset(name);choiceA='fire';choiceB=state.owned.includes('ice')?'ice':'';selected='';render(); }
-function ancestors(id,set=new Set()) { if(set.has(id)) return set;set.add(id); (M.find(id)?.inputs||[]).forEach(p=>ancestors(p,set)); return set; }
-function visible(p) { return mode==='design' || !p.inputs || state.discovered.includes(p.id); }
-function renderAnalysis() {
-    $('analysis').hidden = mode === 'player';
-    const stage = analysis.stages[analysisStage];
-    const available = new Set(stage.reachable);
-    $('analysis').innerHTML = `<div class="analysis-header"><div><div class="eyebrow">Structure analysis / potential acquisition</div><h2>${analysis.issues.length ? analysis.issues.length+' structure issues' : 'No circular or unreachable recipes'}</h2><p>${analysis.baseCount} base spells · ${analysis.fusionCount} fusions · ${analysis.multiStepCount} multi-step fusion. Unlimited farmable materials assumed.</p></div><div class="analysis-controls"><label>Milestone<select id="analysis-stage">${stageNames.map((name,i)=>`<option value="${i}" ${i===analysisStage?'selected':''}>${name}</option>`).join('')}</select></label><button id="export-analysis">Export analysis</button></div></div><div class="analysis-result"><strong>${stage.reachable.length} / ${M.spells.length} spells reachable · forge cap ${stage.forge}</strong><p>${stage.reachable.map(id=>M.find(id).name).join(' · ')}</p><p>This analyzes ingredients and gates. It does not prove that a boss can be defeated or that the economy is balanced. Changing this milestone does not change your free-play state.</p></div><details><summary>Acquisition and dependency table</summary><div class="table-scroll"><table><thead><tr><th>Spell</th><th>Decision</th><th>Earliest milestone</th><th>Selected milestone</th><th>Directly used by</th></tr></thead><tbody>${M.spells.map(p=>`<tr><td>${p.name}</td><td>${p.known?'PRD':'Proposal'}</td><td>${stageNames[analysis.bySpell[p.id].earliestStage]||'Unreachable'}</td><td>${available.has(p.id)?'Reachable':'Locked'}</td><td>${analysis.bySpell[p.id].usedBy.map(id=>M.find(id).name).join(', ')||'Final result'}</td></tr>`).join('')}</tbody></table></div></details>`;
-    $('analysis-stage').onchange = event => { analysisStage = Number(event.target.value); renderAnalysis(); updateViewLink(); };
-    $('export-analysis').onclick = () => {
-        const report = {metadata, milestone: stageNames[analysisStage], analysis,
-            simulation: {bosses: state.bosses, forge: state.forge, essence: state.essence,
-                shards: state.shards, owned: state.owned, discovered: state.discovered},
-            limits: 'Structural acquisition only. Proposed content and economy are not approved game design.'};
-        const url = URL.createObjectURL(new Blob([JSON.stringify(report,null,4)], {type:'application/json'}));
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `fusion-analysis-${metadata.version}.json`;
-        link.click();
-        setTimeout(()=>URL.revokeObjectURL(url),1000);
-    };
+const find = id => catalog.find(spell => spell.id === id);
+const decision = spell => spell.draft ? 'Local draft' : spell.known ? 'PRD decision' : 'Catalog proposal';
+const badge = spell => `<span class="tag ${spell.draft?'draft':spell.known?'approved':''}">${decision(spell)}</span>`;
+function sprite(name) {
+    const rect = {fire:[18,1016,289,235],ice:[338,1007,309,242],frostfire:[666,1008,287,243]}[name];
+    if (!rect) return '';
+    const [x,y,w,h] = rect;
+    return `<span class="pixel-sprite" style="--sx:${x/(1254-w)*100}%;--sy:${y/(1254-h)*100}%;--sw:${1254/w*100}%;--sh:${1254/h*100}%"></span>`;
 }
-function renderMap() {
-    const shown = M.spells.filter(visible);
-    const trace = shown.some(p=>p.id===selected) ? ancestors(selected) : new Set();
-    const paths = shown.filter(p=>p.inputs).flatMap(p=>p.inputs.map(id=>{
-        const from=M.find(id),active=trace.has(p.id)&&trace.has(id);
-        return `<path class="edge ${p.known?'':'proposal'} ${active?'highlight':trace.size?'dim':''}" d="M ${from.x+82} ${from.y} C ${from.x+210} ${from.y},${p.x-210} ${p.y},${p.x-82} ${p.y}"/>`;
-    })).join('');
-    $('map').innerHTML = `<span class="column-label" style="left:14.0625%">01 / Base spells</span><span class="column-label" style="left:48.9583%">02 / First fusion</span><span class="column-label" style="left:83.8542%">03 / Multi-step fusion</span><svg viewBox="0 0 960 650" preserveAspectRatio="none" aria-hidden="true">${paths}</svg>` + shown.map(p=>{
-        const owned=state.owned.includes(p.id);
-        return `<button class="node ${p.known?'':'proposal'} ${owned?'owned':''} ${selected===p.id?'selected':''} ${trace.size&&!trace.has(p.id)?'dim':''}" data-spell="${p.id}" aria-pressed="${selected===p.id}" style="left:${p.x/960*100}%;top:${p.y}px;--node-color:${p.color}"><span class="status">${owned?'UNLOCKED':p.known?'PRD':'PROPOSAL'}</span><span class="symbol" aria-hidden="true">${p.symbol}</span><span class="node-title">${p.name}</span><span class="node-note">${p.inputs?`Forge ${p.level} · fusion`:`${M.realms[p.realm]} · ${p.id==='fire'?'starting spell':p.cost+' shards'}`}</span></button>`;
-    }).join('');
-    $('map').querySelectorAll('[data-spell]').forEach(b=>b.onclick=()=>{selected=b.dataset.spell;renderMap();renderInspector();updateViewLink();});
-    $('map-subtitle').textContent=mode==='design'?'Designer-only proposal. Follow a line from ingredient to result.':'Undiscovered fusion nodes and recipe links are hidden.';
-    $('map-note').textContent=mode==='design'?'Solid content: Firebolt, Icebolt and Frostfire Bolt. Dashed nodes and links are design proposals, not approved additions. On narrow screens, scroll the atlas sideways.':`${analysis.fusionCount-state.discovered.length} fusion recipes remain undiscovered. The PRD does not decide whether the final game shows a hidden-recipe count. Base-spell previews here are a simulation choice.`;
-}
-function renderInspector() {
-    const p=M.find(selected);
-    if(!p || !visible(p)) { $('inspector').innerHTML=mode==='design'?'<div class="eyebrow">Reading the atlas</div><h2>Follow a branch</h2><p>Select a spell to highlight every ingredient it depends on.</p><p>Solid borders mark the three named PRD spells. Dashed borders mark proposed content. Status labels show what you have actually unlocked.</p><p>Six base spells → five first-step fusions → one multi-step fusion.</p>':'<div class="eyebrow">Recipe discovery</div><h2>Something to discover</h2><p>Choose two unlocked spells in the forge. Hidden results are only revealed by a successful craft.</p>';return; }
-    const owned=state.owned.includes(p.id);
-    $('inspector').innerHTML=`<span class="tag ${p.known?'confirmed':'proposed'}">${p.known?'PRD CONTENT':'CONTENT PROPOSAL'}</span><div class="big-symbol" style="color:${p.color}" aria-hidden="true">${p.symbol}</div><h2>${p.name}</h2><p>${p.role}</p><dl class="facts"><div><dt>Library</dt><dd>${owned?'Unlocked permanently':'Not unlocked'}</dd></div><div><dt>Forge requirement</dt><dd>${p.level===0?'Starting spell':'Level '+p.level}</dd></div><div><dt>Acquisition</dt><dd>${p.inputs?'Recipe discovery':p.id==='fire'?'Granted at start':p.cost+' '+M.realms[p.realm].toLowerCase()+' shards'}</dd></div></dl>${p.inputs?`<div class="recipe">${p.inputs.map(id=>M.find(id).name).join(' + ')}<br>→ ${p.name}</div><p>${p.known?'PRD §7: first fusion after the Ice boss.':'Proposed recipe and forge requirement.'}</p>`:'<p>All base spells also have a finished-spell drop path in the PRD; drops are not simulated here.</p>'}${owned?'<button id="use-ingredient" class="small">Use as ingredient</button>':''}`;
-    if(owned) $('use-ingredient').onclick=()=>{if(choiceA===p.id) choiceB='';else if(!choiceA) choiceA=p.id;else choiceB=p.id;renderForge();$('ingredient-a').scrollIntoView({block:'center'});};
-}
-function renderForge() {
-    const options='<option value="">Choose a spell…</option>'+state.owned.map(id=>`<option value="${id}">${M.find(id).name}</option>`).join('');
-    $('ingredient-a').innerHTML=options;$('ingredient-b').innerHTML=options;
-    $('ingredient-a').value=choiceA;$('ingredient-b').value=choiceB;
-    const current=Math.min(state.bosses,3);
-    $('farm').textContent=`Collect 5 ${M.realms[current].toLowerCase()} shards`;
-    $('farm-note').textContent='Or return to an unlocked realm below. Intro Icebolt costs exactly 5 ice shards; all other base costs here are proposals.';
-    $('craft-actions').innerHTML=M.realms.filter((_,i)=>i<=current).map((r,i)=>`<button class="small" data-farm="${i}">+5 ${r} shards</button>`).join('')+M.spells.filter(p=>!p.inputs&&!state.owned.includes(p.id)).map(p=>`<button class="small" data-craft="${p.id}" ${p.realm>state.bosses||p.level>state.forge?'disabled':''}>Craft ${p.name} · ${p.cost}</button>`).join('')+'<button class="small" id="essence">Grant 60 essence · design control</button>';
-    $('craft-actions').querySelectorAll('[data-farm]').forEach(b=>b.onclick=()=>dispatch({type:'farm',realm:Number(b.dataset.farm)}));
-    $('craft-actions').querySelectorAll('[data-craft]').forEach(b=>b.onclick=()=>dispatch({type:'craft',id:b.dataset.craft}));
-    $('essence').onclick=()=>dispatch({type:'essence'});
-    $('upgrade').textContent=`Upgrade forge${state.forge>0&&state.forge<M.cap({bosses:4})?' · '+rules.forgeUpgradeCosts[state.forge]+' essence':''}`;
-    $('boss').disabled=state.bosses===4;
-    $('boss').textContent=state.bosses<4?`Simulate ${M.realms[state.bosses]} boss victory`:'All bosses defeated';
-}
-function render() {
-    $('tabs').innerHTML=Object.entries(scenarios).map(([id,s])=>`<button role="tab" aria-selected="${scenario===id}" aria-controls="scenario" data-scenario="${id}">${s.name}</button>`).join('');
-    $('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>start(b.dataset.scenario));
-    const s=scenarios[scenario],next=s.steps[step];
-    $('scenario').innerHTML=`<div><span class="step">${s.steps.length?`GUIDED WALKTHROUGH · ${Math.min(step+1,s.steps.length)} / ${s.steps.length}`:'INDEPENDENT EXPLORATION'}</span><h3>${mode==='player'&&scenario==='intro'?'Your first fusion':s.title}</h3><p>${s.description}</p></div>${next?`<button class="primary" id="next">${step+1}. ${next[0]}</button>`:s.steps.length?'<span class="tag confirmed">Walkthrough complete</span>':'<span class="tag">Use the forge below</span>'}`;
-    if(next) $('next').onclick=()=>{state=M.reduce(state,next[1]);if(next[1].type==='fuse'){choiceA=next[1].a;choiceB=next[1].b;if(!state.error)selected=state.discovered.at(-1)||selected;}if(!state.error||scenario==='invalid')step++;render();};
-    $('progress').innerHTML=M.realms.map((r,i)=>`<div class="realm ${i===Math.min(state.bosses,3)?'current':''}"><strong>${String(i+1).padStart(2,'0')} / ${r}</strong><span>${i<state.bosses?'Boss defeated':i===state.bosses?'Available · boss undefeated':'Locked behind '+M.realms[i-1]+' boss'}</span></div>`).join('');
-    $('state').innerHTML=`<div class="stat"><strong>${state.forge} <small class="muted">/ ${M.cap(state)}</small></strong><span>Forge level / unlocked cap</span></div><div class="stat"><strong>${state.essence}</strong><span>Essence · proposed currency</span></div><div class="stat"><strong>${state.owned.length} <small class="muted">/ ${M.spells.length}</small></strong><span>Permanent spells unlocked</span></div><div class="stat"><strong>${state.discovered.length} <small class="muted">/ ${analysis.fusionCount}</small></strong><span>Fusion recipes discovered</span></div>`;
-    $('notice').textContent=state.notice;$('notice').className=state.error?'error':'';
-    $('library').textContent=state.owned.map(id=>M.find(id).name).join(' · ');
-    $('resources').textContent='Shards: '+M.realms.map((r,i)=>`${r} ${state.shards[i]}`).join(' / ')+'. Essence: '+state.essence+'.';
-    $('discoveries').textContent='Discovered recipes: '+(state.discovered.map(id=>M.find(id).name).join(', ')||'none')+'. Bosses defeated: '+state.bosses+'/4.';
-    $('log').innerHTML=state.log.map(line=>`<li>${line}</li>`).join('');
-    $('design-mode').setAttribute('aria-pressed',mode==='design');$('player-mode').setAttribute('aria-pressed',mode==='player');
-    $('design-questions').hidden=mode==='player';
-    $('catalog-version').textContent=`Catalog ${metadata.version} · reviewed ${metadata.lastReviewed}`;
-    renderAnalysis();renderMap();renderInspector();renderForge();updateViewLink();
-}
-function updateViewLink() {
+const icon = spell => `<span class="icon" style="--spell-color:${spell.color}" aria-hidden="true">${sprite(spell.id) || escape(spell.symbol)}</span>`;
+const spellButton = id => { const spell = find(id); return `<button class="link-spell" data-select="${spell.id}">${icon(spell)}${escape(spell.name)} <span aria-hidden="true">↗</span></button>`; };
+function notify(message, error = false) { $('notice').textContent = message; $('notice').className = error ? 'error' : ''; }
+function linkView() {
     const url = new URL(location.href);
-    url.searchParams.set('scenario',scenario);
-    url.searchParams.set('view',mode);
-    url.searchParams.set('milestone',analysisStage);
-    if(selected && visible(M.find(selected))) url.searchParams.set('spell',selected);
-    else url.searchParams.delete('spell');
+    for (const key of ['scenario','mode','selected','analysisStage']) url.searchParams.delete(key);
+    url.searchParams.set('spell',selected);
+    url.searchParams.set('stage',milestone);
+    url.searchParams.set('view',view);
     history.replaceState(null,'',url);
 }
-$('ingredient-a').onchange=e=>{choiceA=e.target.value;};$('ingredient-b').onchange=e=>{choiceB=e.target.value;};
-$('forge').onclick=()=>dispatch({type:'fuse',a:choiceA,b:choiceB});
-$('upgrade').onclick=()=>dispatch({type:'upgrade'});
-$('boss').onclick=()=>dispatch({type:'boss'});
-$('farm').onclick=()=>dispatch({type:'farm',realm:Math.min(state.bosses,3)});
-$('reset').onclick=()=>start(scenario);
-$('show-all').onclick=()=>{selected='';renderMap();renderInspector();updateViewLink();};
-$('design-mode').onclick=()=>{mode='design';render();};$('player-mode').onclick=()=>{mode='player';render();};
-const initialView = new URLSearchParams(location.search);
-scenario = Object.hasOwn(scenarios,initialView.get('scenario')) ? initialView.get('scenario') : 'intro';
-mode = initialView.get('view') === 'player' ? 'player' : 'design';
-const requestedStage = Number(initialView.get('milestone'));
-if(initialView.has('milestone') && Number.isInteger(requestedStage) && requestedStage >= 0 && requestedStage <= 4) analysisStage = requestedStage;
-state = M.preset(scenario);
-choiceB = state.owned.includes('ice') ? 'ice' : '';
-selected = M.find(initialView.get('spell')) && visible(M.find(initialView.get('spell'))) ? initialView.get('spell') : '';
-if(analysis.issues.length) {
-    $('analysis').textContent = 'Catalog validation failed: ' + analysis.issues.join('; ');
-    $('notice').textContent = 'The simulator cannot run until the catalog is repaired.';
-} else render();
+function trace(id, result = new Set()) {
+    if (result.has(id)) return result;
+    result.add(id);
+    find(id)?.inputs?.forEach(input => trace(input,result));
+    return result;
+}
+function selectSpell(id) {
+    const origin = document.activeElement?.closest('[data-select]')?.parentElement?.id;
+    selected = find(id) ? id : '';
+    renderLibrary(); renderConnections(); renderInspector(); linkView();
+    if (origin && selected) $(origin)?.querySelector(`[data-select="${selected}"]`)?.focus({preventScroll:true});
+}
+function renderLibrary() {
+    const text = $('search').value.trim().toLowerCase();
+    const filter = $('library-filter').value;
+    const matching = catalog.filter(spell => `${spell.name} ${spell.role}`.toLowerCase().includes(text) &&
+        (filter==='all' || filter==='base'&&!spell.inputs || filter==='fusion'&&spell.inputs ||
+            filter==='draft'&&spell.draft || filter==='known'&&spell.known));
+    $('spell-count').textContent = `${matching.length} / ${catalog.length}`;
+    $('library').innerHTML = ['base','fusion'].map(kind => {
+        const group = matching.filter(spell => (spell.inputs?'fusion':'base') === kind);
+        return group.length ? `<h3 class="library-group">${kind==='base'?'Base spells':'Fusions'} / ${group.length}</h3>` + group.map(spell => `<button class="spell-row ${selected===spell.id?'selected':''}" data-select="${spell.id}" aria-pressed="${selected===spell.id}">${icon(spell)}<span class="spell-label"><strong>${escape(spell.name)}</strong><small>${spell.draft?'◆ Local draft':spell.known?'● PRD decision':'◇ Catalog proposal'} · Forge ${spell.level}</small></span></button>`).join('') : '';
+    }).join('') || '<p class="empty">No matching spells. Try another search or filter.</p>';
+}
+function renderConnections() {
+    const available = new Set(analysis.stages[milestone].reachable);
+    const traced = selected ? trace(selected) : new Set();
+    const layout = layoutCatalog(catalog);
+    const positions = new Map(layout.nodes.map(spell => [spell.id,spell]));
+    const edges = layout.nodes.filter(spell => spell.inputs).flatMap(spell => spell.inputs.map(id => {
+        const from = positions.get(id), active = traced.has(spell.id) && traced.has(id);
+        return `<path class="edge ${spell.known?'':'proposal'} ${active?'highlight':selected?'dim':''}" d="M ${from.x+82} ${from.y} C ${from.x+170} ${from.y},${spell.x-170} ${spell.y},${spell.x-82} ${spell.y}"/>`;
+    })).join('');
+    $('map').style.width = `${layout.width}px`; $('map').style.height = `${layout.height}px`;
+    $('map').innerHTML = Array.from({length:layout.columns},(_,column) => `<span class="column-label" style="left:${34+240*column}px">${String(column+1).padStart(2,'0')} / ${column===0?'BASE SPELLS':column===1?'FIRST FUSION':`FUSION DEPTH ${column}`}</span>`).join('') +
+        `<svg viewBox="0 0 ${layout.width} ${layout.height}" aria-hidden="true">${edges}</svg>` + layout.nodes.map(spell => `<button class="node ${spell.draft?'draft':spell.known?'approved':''} ${selected===spell.id?'selected':''} ${selected&&!traced.has(spell.id)?'dim':''} ${available.has(spell.id)?'':'gated'}" style="left:${spell.x}px;top:${spell.y}px" data-select="${spell.id}" aria-pressed="${selected===spell.id}" aria-label="${escape(spell.name)} · ${decision(spell)} · ${available.has(spell.id)?'Available':'Gated'}">${icon(spell)}<span><strong>${escape(spell.name)}</strong><small class="${spell.draft?'draft-label':''}">${spell.draft?'Draft · ':''}Forge ${spell.level} · ${available.has(spell.id)?'Available':'Gated'}</small></span></button>`).join('');
+    $('recipes').innerHTML = `<table><thead><tr><th>Ingredients</th><th>Result</th><th>Forge</th><th>Earliest availability</th><th>Status</th></tr></thead><tbody>${catalog.filter(spell => spell.inputs).map(spell => `<tr><td>${spell.inputs.map(id => escape(find(id).name)).join(' + ')}</td><td><button data-select="${spell.id}">${escape(spell.name)}</button></td><td>${spell.level}</td><td>${stageNames[analysis.bySpell[spell.id].earliestStage] || 'Unreachable'}</td><td>${decision(spell)}</td></tr>`).join('')}</tbody></table>`;
+    $('map-scroll').hidden = view !== 'map'; $('recipes').hidden = view !== 'recipes';
+    $('map-view').setAttribute('aria-pressed',view==='map'); $('table-view').setAttribute('aria-pressed',view==='recipes');
+    $('milestone').value = milestone;
+    $('availability-summary').textContent = `${available.size} / ${catalog.length} available · Forge cap ${analysis.stages[milestone].forge} · ${stageNames[milestone]}`;
+}
+function renderInspector() {
+    const spell = find(selected);
+    if (!spell) {
+        $('inspector').innerHTML = '<span class="eyebrow">Spell details</span><h2>Follow a connection.</h2><p>Select a spell to see its ingredients, acquisition route and every recipe that uses it.</p><p>Solid borders mark PRD decisions. Dashed borders mark proposals. Purple marks your local drafts.</p>';
+        return;
+    }
+    const details = analysis.bySpell[spell.id], available = analysis.stages[milestone].reachable.includes(spell.id);
+    $('inspector').innerHTML = `<span class="eyebrow">Spell details</span>${badge(spell)}<div class="inspector-hero">${icon(spell)}</div><h2>${escape(spell.name)}</h2><p>${escape(spell.role)}</p><dl class="facts"><div><dt>Type</dt><dd>${spell.inputs?'Fusion':'Base spell'}</dd></div><div><dt>Forge requirement</dt><dd>${spell.level}</dd></div><div><dt>Earliest availability</dt><dd>${stageNames[details.earliestStage]||'Unreachable'}</dd></div><div><dt>Selected milestone</dt><dd>${available?'Available':'Gated'}</dd></div>${!spell.inputs?`<div><dt>Acquisition</dt><dd>${spell.id==='fire'&&spell.level===0?'Starting spell':`${spell.cost} ${realms[spell.realm].toLowerCase()} shards`}</dd></div>`:''}</dl><h3>${spell.inputs?'Made from':'Acquisition route'}</h3>${spell.inputs?spell.inputs.map(spellButton).join(''):'<p>Shard crafting and finished-spell drops. No spell levels.</p>'}<h3>Used in ${details.usedBy.length} ${details.usedBy.length===1?'recipe':'recipes'}</h3>${details.usedBy.length?details.usedBy.map(spellButton).join(''):'<p>No further fusion in this catalog yet.</p>'}<div class="inspector-actions"><button id="edit-spell" class="primary">${spell.draft?'Edit draft':'Edit as local draft'}</button><button id="extend-spell">+ Build a fusion with this spell</button>${spell.draft?'<button id="remove-draft">'+(spells.some(item=>item.id===spell.id)?'Restore catalog version':'Remove draft')+'</button>':''}</div>`;
+    $('edit-spell').onclick = () => openEditor(spell);
+    $('extend-spell').onclick = () => openEditor(null,[spell.id,'']);
+    if (spell.draft) $('remove-draft').onclick = () => {
+        const original = spells.find(item => item.id === spell.id);
+        if (!original && details.usedBy.length) return notify(`Remove dependent drafts first: ${details.usedBy.map(id => find(id).name).join(', ')}.`,true);
+        const next = catalog.filter(item => item.id !== spell.id);
+        if (original) next.splice(catalog.indexOf(spell),0,original);
+        if (applyCatalog(next)) { if (!original) selectSpell(''); notify(original?'Catalog spell restored.':'Draft removed.'); }
+    };
+}
+function renderBench() {
+    const options = '<option value="">Choose a spell…</option>' + catalog.map(spell => `<option value="${spell.id}">${escape(spell.name)}${spell.draft?' · Draft':''}</option>`).join('');
+    if (!find(choiceA)) choiceA = ''; if (!find(choiceB)) choiceB = '';
+    $('ingredient-a').innerHTML = options; $('ingredient-b').innerHTML = options;
+    $('ingredient-a').value = choiceA; $('ingredient-b').value = choiceB;
+    renderPair();
+}
+function renderPair() {
+    const pair = [choiceA,choiceB];
+    const match = catalog.find(spell => spell.inputs?.every(id => pair.includes(id)));
+    if (!choiceA || !choiceB) $('pair-result').innerHTML = '<p>Choose two different spells to explore their combination.</p>';
+    else if (choiceA === choiceB) $('pair-result').innerHTML = '<p>Choose two different spells. A recipe needs two distinct ingredients.</p>';
+    else if (match) {
+        $('pair-result').innerHTML = `<div><strong>${escape(match.name)}</strong><span class="result-label">Existing recipe · ${decision(match)} · Forge ${match.level}</span></div><button id="inspect-pair">Inspect recipe →</button>`;
+        $('inspect-pair').onclick = () => selectSpell(match.id);
+    } else {
+        $('pair-result').innerHTML = '<div><strong>No recipe yet.</strong><span class="result-label">Explore a new connection as a local draft.</span></div><button class="primary" id="create-pair">+ Create fusion</button>';
+        $('create-pair').onclick = () => openEditor(null,pair);
+    }
+}
+function renderAnalysis() {
+    $('analysis-summary').textContent = analysis.issues.length ? `${analysis.issues.length} structure issues` : '✓ No circular or unreachable recipes';
+    $('analysis-detail').innerHTML = `<p>${analysis.baseCount} base spells · ${analysis.fusionCount} fusions · ${analysis.multiStepCount} multi-step fusions.</p><p>Checks every boss milestone for missing ingredients, repeated pairs, circular dependencies and unreachable forge requirements.</p>${analysis.issues.length?`<ul>${analysis.issues.map(issue=>`<li>${escape(issue)}</li>`).join('')}</ul>`:''}<p>Shared target: six base spells and six fusions, including a multi-step chain (AC-12–13). Local drafts can extend this scope for discussion. A valid structure does not prove combat balance or economy.</p>`;
+}
+function render() {
+    analysis = analyzeCatalog(catalog);
+    if (!find(selected)) selected = '';
+    renderLibrary(); renderConnections(); renderInspector(); renderBench(); renderAnalysis();
+    const drafts = catalog.filter(spell => spell.draft).length;
+    $('save-state').textContent = drafts ? `${drafts} local ${drafts===1?'draft':'drafts'} · ${storageAvailable?'saved in this browser':'memory only; export to keep'}` : 'Shared catalog · no local drafts';
+    $('reset').disabled = !drafts;
+    linkView();
+}
+function applyCatalog(next) {
+    try {
+        const normalized = normalizeWorkspace(workspaceDocument(next));
+        const report = analyzeCatalog(normalized);
+        if (report.issues.length) throw new Error(report.issues.join('\n'));
+        catalog = normalized;
+    } catch (error) { notify(error.message,true); return false; }
+    try { localStorage.setItem(storageKey,JSON.stringify(workspaceDocument(catalog))); storageAvailable = true; }
+    catch { storageAvailable = false; notify('Browser storage is unavailable. Export your workspace to keep these drafts.',true); }
+    render(); return true;
+}
+function openEditor(spell = null, pair = null) {
+    editingId = spell?.id || null;
+    const form = $('spell-form'); form.reset();
+    const fields = form.elements;
+    $('editor-title').textContent = spell ? `Edit ${spell.name}` : pair ? 'New fusion' : 'New spell';
+    $('editor-note').textContent = spell?.known ? 'Editing a PRD decision creates a local proposal. The approved shared catalog stays unchanged.' : 'Drafts are saved in this browser. Export a workspace to share your ideas.';
+    fields.id.readOnly = !!spell;
+    for (const field of ['name','id','role','symbol','color','level','realm','cost']) {
+        if (spell?.[field] !== undefined) fields[field].value = spell[field];
+    }
+    fields.kind.value = spell?.inputs || pair ? 'fusion' : 'base';
+    const options = '<option value="">Choose a spell…</option>' + catalog.filter(item => item.id !== editingId).map(item => `<option value="${item.id}">${escape(item.name)}</option>`).join('');
+    fields.inputA.innerHTML = options; fields.inputB.innerHTML = options;
+    fields.inputA.value = spell?.inputs?.[0] || pair?.[0] || '';
+    fields.inputB.value = spell?.inputs?.[1] || pair?.[1] || '';
+    if (!spell) fields.level.value = pair ? Math.max(1,...pair.map(id => find(id)?.level || 0)) : 1;
+    $('form-error').textContent = ''; toggleKind(); $('editor').showModal();
+}
+function toggleKind() {
+    const fusion = $('spell-form').elements.kind.value === 'fusion';
+    $('base-fields').hidden = fusion; $('fusion-fields').hidden = !fusion;
+    for (const name of ['realm','cost']) $('spell-form').elements[name].disabled = fusion;
+    for (const name of ['inputA','inputB']) { $('spell-form').elements[name].disabled = !fusion; $('spell-form').elements[name].required = fusion; }
+}
+$('spell-form').elements.kind.onchange = toggleKind;
+$('spell-form').onsubmit = event => {
+    event.preventDefault();
+    const fields = Object.fromEntries(new FormData(event.currentTarget));
+    const spell = {id:fields.id,name:fields.name,role:fields.role,symbol:fields.symbol,color:fields.color,level:Number(fields.level)};
+    if (fields.kind === 'fusion') spell.inputs = [fields.inputA,fields.inputB];
+    else Object.assign(spell,{realm:Number(fields.realm),cost:Number(fields.cost)});
+    try {
+        if (!editingId && find(spell.id)) throw new Error('This stable ID already exists. Choose a new ID.');
+        const next = editingId ? catalog.map(item => item.id===editingId?spell:item) : [...catalog,spell];
+        const normalized = normalizeWorkspace(workspaceDocument(next));
+        const report = analyzeCatalog(normalized);
+        if (report.issues.length) throw new Error(report.issues.join('\n'));
+        if (!applyCatalog(normalized)) return;
+        selectSpell(spell.id); $('editor').close();
+        notify(`${spell.name} saved as a local draft.${storageAvailable?'':' Browser storage unavailable; export to keep it.'}`);
+    } catch (error) { $('form-error').textContent = error.message; }
+};
+for (const id of ['close-editor','cancel-editor']) $(id).onclick = () => $('editor').close();
+$('new-spell').onclick = () => openEditor();
+$('search').oninput = renderLibrary; $('library-filter').onchange = renderLibrary;
+$('milestone').onchange = event => { milestone = Number(event.target.value); renderConnections(); renderInspector(); linkView(); };
+$('clear-trace').onclick = () => selectSpell('');
+$('map-view').onclick = () => { view = 'map'; renderConnections(); linkView(); };
+$('table-view').onclick = () => { view = 'recipes'; renderConnections(); linkView(); };
+$('ingredient-a').onchange = event => { choiceA = event.target.value; renderPair(); };
+$('ingredient-b').onchange = event => { choiceB = event.target.value; renderPair(); };
+document.addEventListener('click',event => { const button = event.target.closest('[data-select]'); if (button) selectSpell(button.dataset.select); });
+$('reset').onclick = () => $('reset-dialog').showModal();
+$('cancel-reset').onclick = () => $('reset-dialog').close();
+$('confirm-reset').onclick = () => { if (applyCatalog(spells)) { $('reset-dialog').close(); notify('Shared catalog restored. Local drafts cleared.'); } };
+$('export').onclick = () => {
+    const report = {...workspaceDocument(catalog),analysis,selectedMilestone:stageNames[milestone],limits:'Local content proposals. Structural checks only; no combat or economy balance.'};
+    const url = URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));
+    const link = document.createElement('a'); link.href = url; link.download = `spellforge-workspace-${metadata.version}.json`; link.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    notify('Workspace exported. Share the JSON file to share local drafts; a page link only shares the selected spell and milestone.');
+};
+$('import').onclick = () => $('import-file').click();
+$('import-file').onchange = async event => {
+    const file = event.target.files[0]; if (!file) return;
+    try {
+        if (file.size > 500000) throw new Error('Workspace file is too large (maximum 500 KB).');
+        const document = JSON.parse(await file.text());
+        const incoming = normalizeWorkspace(document);
+        const report = analyzeCatalog(incoming);
+        if (report.issues.length) throw new Error(report.issues.join(' '));
+        // Merge rather than silently discard drafts already in this browser.
+        const next = [...catalog];
+        for (const spell of incoming) {
+            const index = next.findIndex(item => item.id===spell.id);
+            if (index < 0) next.push(spell);
+            else if (spell.draft && next[index].draft && JSON.stringify(spell)!==JSON.stringify(next[index])) {
+                throw new Error(`Conflicting local draft: ${spell.name}. Export or reset your current drafts before importing this file.`);
+            } else if (spell.draft) next[index] = spell;
+        }
+        if (applyCatalog(next)) notify(`Workspace imported; existing local drafts retained.${storageAvailable?'':' Export to keep; browser storage unavailable.'}`);
+    } catch (error) { notify(`Import failed: ${error.message}`,true); }
+    event.target.value = '';
+};
+$('catalog-version').textContent = `CATALOG ${metadata.version}`;
+render();
+if (startupNotice) notify(startupNotice,true);

@@ -1,6 +1,6 @@
 // The simulator catalog. Proposed content is never an implicit PRD decision.
 export const metadata = {
-    version: '2026.10.30.1',
+    version: '2026.10.30.2',
     prdVersion: '1.2',
     lastReviewed: '2026-10-30',
     sourcePrdSha256: '80f9e3888361feb4021eae5d950bca564d4e49148bfab9eff868f2e119e2e103'
