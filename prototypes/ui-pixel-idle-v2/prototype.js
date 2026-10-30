@@ -1,0 +1,337 @@
+/* THROWAWAY REVIEW BUILD. Local, accelerated simulation; no persistence or authoritative rewards. */
+const params = new URLSearchParams(location.search);
+const variants = { A: 'Compact rail', B: 'Mage crest', C: 'Vitals first' };
+let variant = variants[params.get('variant')] ? params.get('variant') : 'A';
+const phone = document.querySelector('#phone');
+const realms = ['Fire', 'Ice', 'Earth', 'Wind'];
+const places = ['Emberwood', 'Hushed Glacier', 'Verdant Hollow', 'Skyreach'];
+const bosses = ['The Ember Sentinel', 'The Glacier Warden', 'The Root Colossus', 'The Sky Keeper'];
+const rects = {
+    mage:[8,10,300,315],casting:[312,0,370,325],slime:[684,82,267,250],hit:[966,56,284,282],golem:[0,329,365,345],
+    moth:[388,405,267,257],fox:[669,402,290,263],spirit:[980,417,267,250],workshop:[8,680,332,315],
+    mine:[346,680,319,319],pond:[671,671,296,332],portal:[977,683,273,316],fire:[18,1016,289,235],
+    ice:[338,1007,309,242],frost:[666,1008,287,243],shards:[982,1015,265,233]
+};
+const sprite = (name, extra='') => {
+    const [x,y,w,h] = rects[name] || rects.shards;
+    return `<span class="sprite ${extra}" aria-hidden="true" style="--sx:${x/(1254-w)*100}%;--sy:${y/(1254-h)*100}%;--sw:${1254/w*100}%;--sh:${1254/h*100}%"></span>`;
+};
+const spells = [
+    {name:'Firebolt',art:'fire',element:'Fire',damage:24,cooldown:3,description:'A spark of fire, cast at the nearest enemy.'},
+    {name:'Icebolt',art:'ice',element:'Ice',damage:20,cooldown:4,description:'A shard of ice. Add it to your idle build alongside Firebolt.'},
+    {name:'Frostfire Bolt',art:'frost',element:'Fusion',damage:62,cooldown:3,description:'Fire and ice, forged together. Both original spells stay in your Library.'}
+];
+const fresh = () => ({
+    view:'realm',realm:0,levels:[1,1,1,1],cleared:[0,0,0,0],won:[false,false,false,false],shards:[0,0,0,0],ore:120,pearls:80,
+    idle:['Firebolt'],boss:['Firebolt'],autos:[true,true,true,true],unlocked:['Firebolt'],familiar:0,
+    hpBonus:0,damageBonus:0,forgeLevel:1,mining:2,fishing:1,synergy:true,largeCollection:false,
+    collectionTab:'spells',build:'idle',queries:{spells:'',familiars:''},filters:{spells:'All',familiars:'All'},pages:{spells:0,familiars:0},
+    modal:null,seconds:0,kills:0,enemyHp:40,stageKills:0,connected:true,fight:null,returnPending:false,returnClaimed:false,returned:null
+});
+let state = fresh();
+let toastTimer;
+let toastText = '';
+let lastFocus;
+const esc = text => String(text).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const spell = name => spells.find(s=>s.name===name);
+const hpMax = () => Math.round((100 + state.hpBonus) * (state.view === 'fight' && state.familiar % 2 === 0 ? 1.1 : 1));
+const power = () => state.damageBonus + (state.view==='fight'?state.boss:state.idle).reduce((sum,name)=>sum+spell(name).damage,0);
+const combatPower = () => Math.round(power()*(state.view==='fight' && state.familiar % 2 === 1 ? 1.08 : 1));
+const rate = () => (power()/24*.6).toFixed(1);
+const gate = () => state.levels[state.realm]===5 && state.cleared[state.realm]>=5 && !state.won[state.realm];
+const canVisit = r => r===0 || state.won[r-1];
+const atCap = () => state.seconds>=43200;
+const familiar = id => ({id,name:(id%2?'Ember fox':'Moon moth')+(id>1?` ${String(Math.floor(id/2)+1).padStart(3,'0')}`:''),art:id%2?'fox':'moth',buff:id%2?'+8% Spell damage':'+10% HP',type:id%2?'Damage':'HP'});
+const btn = (text,action,secondary=false,disabled=false) => `<button class="rune-button ${secondary?'secondary':''}" data-action="${action}" ${disabled?'disabled':''}>${text}</button>`;
+const icon = name => `<span class="spell-icon ${name?'':'empty'}">${name?sprite(spell(name).art):'+'}</span>`;
+function hud() {
+    const resources = [
+        ['Fire shards',state.shards[0],'F◆','#f5af7a'],['Ice shards',state.shards[1],'I◆','#9cdeee'],
+        ['Earth shards',state.shards[2],'E◆','#b9d99b'],['Wind shards',state.shards[3],'W◆','#d5b8ec'],
+        ['Ore',state.ore,'▨','#bec7d2'],['Pearls',state.pearls,'●','#efdcc0']
+    ];
+    return `<header class="hud hud-${variant.toLowerCase()}" aria-label="Resources and mage stats">${variant==='B'?'<span class="crest" aria-hidden="true">✧</span>':''}<div class="resource-strip">${resources.map(([name,value,glyph,tint])=>`<div class="resource" aria-label="${name}: ${value}" title="${name}"><span class="resource-glyph" style="--tint:${tint}" aria-hidden="true">${glyph}</span><span>${value>=10000?(value/1000).toFixed(1)+'k':value}</span></div>`).join('')}</div><div class="vitals"><span class="hp-stat"><span class="hp-fill" style="transform:scaleX(${state.view==='fight'?Math.max(0,state.fight.hp/hpMax()):1})"></span><b>♥ HP ${state.view==='fight'?Math.ceil(state.fight.hp):hpMax()}/${hpMax()}</b></span><span class="damage-stat">✧ ${combatPower()} <span>Spell damage</span></span><button class="icon-button hud-menu" data-action="menu" aria-label="Open resources, navigation and prototype controls">≡</button></div></header>`;
+}
+function nav() {
+    const items = [['realm','portal','Realm'],['forge','workshop','Forge'],['boss','golem','Boss'],['ventures','mine','Ventures'],['library','moth','Collection']];
+    return `<nav class="bottom-nav" aria-label="Game navigation">${items.map(([view,art,name])=>`<button data-view="${view}" class="${state.view===view?'active':''}" ${state.view===view?'aria-current="page"':''}>${sprite(art)}${name}</button>`).join('')}</nav>`;
+}
+const title = (name,kicker='') => `<div class="page-heading"><div>${kicker?`<div class="kicker">${kicker}</div>`:''}<h2>${name}</h2></div></div>`;
+function scenery() { return `<div class="scenery ${state.realm===1?'ice':''}" style="--realm-x:${({0:0,2:50,3:100})[state.realm]||0}%"></div>`; }
+function stages() {
+    return `<div class="stage-track" aria-label="Realm levels">${[1,2,3,4,5,6].map(level=>`<div class="stage ${level===6?'boss':''} ${state.cleared[state.realm]>=level||state.won[state.realm]?'done':''} ${level===state.levels[state.realm]?'current':''} ${level===6&&gate()?'ready':''}" ${level===state.levels[state.realm]?'aria-current="step"':''} aria-label="Level 1-${level}${level===6?', active boss':''}">${level===6?'♜ ':''}1-${level}</div>`).join('')}</div>`;
+}
+function realmView() {
+    const won = state.won[state.realm];
+    return `<section class="realm-page realm-${realms[state.realm].toLowerCase()}"><div class="scene">${scenery()}<div class="realm-location"><div><span class="kicker">${realms[state.realm].toUpperCase()} REALM · 1-${state.levels[state.realm]}</span><h2>${places[state.realm]}</h2></div><button class="text-button" data-action="map">Realms ↗</button></div><div class="idle-label"><span>●</span> ${atCap()?'IDLE WINDOW COMPLETE':gate()?'FARMING AT THE BOSS GATE':'IDLE COMBAT'}</div><div class="actor mage">${sprite('mage')}<small>MAGE</small></div><div class="actor enemy"><div class="enemy-hp"><i style="width:${state.enemyHp/40*100}%"></i></div>${sprite('slime')}<small>${realms[state.realm].toUpperCase()} SLIME</small></div><div class="shot"></div><span class="damage-float"></span><div class="scene-foot"><span>Spells cast automatically</span><span>${state.kills} monsters defeated</span></div></div><section class="journey-sheet"><div class="row between"><span class="kicker">${gate()?'BOSS GATE REACHED':won?'REALM CONQUERED':'YOUR JOURNEY'}</span><span class="tag">${realms[state.realm]} · 1-${state.levels[state.realm]}</span></div><h3>${gate()?'Keep farming. Face the boss.':won?'A path you have conquered.':'A little further, a little stronger.'}</h3>${stages()}${gate()?'<p class="gate-note">1-5 keeps producing loot. Boss 1-6 waits for you.</p>':won?'<p class="gate-note">Farm any cleared level. This boss cannot be replayed.</p>':`<div class="progress-label"><span>Level 1-${state.levels[state.realm]} · ${state.stageKills}/3 groups</span><span>Auto-progress</span></div><div class="progress-track"><i style="width:${state.stageKills/3*100}%"></i></div>`}<div class="farm-summary"><span>◆ ${realms[state.realm]} shards</span><strong>+${rate()} / sec <span class="muted">· preview</span></strong></div><div class="mini-loadout">${Array.from({length:4},(_,i)=>icon(state.idle[i])).join('')}<button class="text-button" data-action="idleBuild">Edit build ↗</button></div>${atCap()?btn('Begin a new idle window','resetWindow'):gate()?btn('Challenge boss · 1-6','boss'):won&&state.realm<3?btn(`Enter ${realms[state.realm+1]} realm · 1-1`,'nextRealm'):won?btn('Explore your collection','library'):btn('Prepare your boss build','boss',true)}<div class="timer-note">Idle progress: ${Math.floor(state.seconds/3600)}h ${Math.floor(state.seconds%3600/60)}m / 12h maximum · No idle boss victories</div></section></section>`;
+}
+function collectionTools(kind) {
+    const options = kind==='spells'?['All','Unlocked','Fire','Ice','Fusion']:['All','HP','Damage'];
+    return `<div class="collection-tools"><input data-search="${kind}" aria-label="Search ${kind}" placeholder="Search ${kind}…" value="${esc(state.queries[kind])}"><select data-filter="${kind}" aria-label="Filter ${kind}">${options.map(o=>`<option ${state.filters[kind]===o?'selected':''}>${o}</option>`).join('')}</select></div>`;
+}
+function grid(kind,picker=false) {
+    const query = state.queries[kind].toLowerCase();
+    const filter = state.filters[kind];
+    let items = kind==='spells'?spells.map((s,id)=>({...s,id,locked:!state.unlocked.includes(s.name)})):Array.from({length:state.largeCollection?240:2},(_,i)=>familiar(i));
+    const total = items.length;
+    items = items.filter(item=>item.name.toLowerCase().includes(query) && (filter==='All'||(kind==='spells'?(filter==='Unlocked'?!item.locked:filter===item.element):item.type===filter)));
+    const perPage = 18;
+    const pages = Math.max(1,Math.ceil(items.length/perPage));
+    state.pages[kind] = Math.min(state.pages[kind],pages-1);
+    const page = state.pages[kind];
+    return `<div class="collection-meta">${items.length} / ${total} ${kind}${state.largeCollection&&kind==='familiars'?' · sample collection':''}${picker?' · select a card':''}</div><div class="collection-grid">${items.slice(page*perPage,(page+1)*perPage).map(item=>{
+        const selected = kind==='familiars'?state.familiar===item.id:state[state.build].includes(item.name);
+        return `<button class="collection-card ${selected?'selected':''} ${item.locked?'locked':''}" data-card="${kind}" data-id="${item.id}" aria-label="${esc(item.name)}${selected?', selected':''}${item.locked?', not unlocked':''}" ${selected?'aria-pressed="true"':'aria-pressed="false"'}>${sprite(item.art)}<strong>${esc(item.name)}</strong><small>${kind==='spells'?(item.locked?'Not unlocked':`${item.damage} damage`):item.buff}</small></button>`;
+    }).join('')}</div>${items.length===0?'<div class="no-results">No matches. Try another name or filter.</div>':''}${pages>1?`<div class="pagination"><button data-page="-1" data-kind="${kind}" ${page===0?'disabled':''} aria-label="Previous page">←</button><span>Page ${page+1} of ${pages} · 18 per page</span><button data-page="1" data-kind="${kind}" ${page===pages-1?'disabled':''} aria-label="Next page">→</button></div>`:''}`;
+}
+function slots(build,autos=false) {
+    return `<div class="slots">${Array.from({length:4},(_,i)=>`<div class="slot"><button class="collection-card" style="min-height:65px;padding:5px" data-slot="${i}" data-build="${build}" aria-label="Choose ${build} spell in slot ${i+1}">${icon(state[build][i])}</button>${autos?`<button class="toggle ${state.autos[i]?'on':''}" data-auto="${i}" aria-pressed="${state.autos[i]}">${state.autos[i]?'Auto':'Manual'}</button>`:''}</div>`).join('')}</div>`;
+}
+function libraryView() {
+    const kind = state.collectionTab;
+    return `<section class="page">${title('Your collection','SPELLS & FAMILIARS')}<div class="tabs"><button data-tab="spells" class="${kind==='spells'?'active':''}">Spells</button><button data-tab="familiars" class="${kind==='familiars'?'active':''}">Familiars</button></div>${kind==='spells'?`<div class="tabs"><button data-build="idle" class="${state.build==='idle'?'active':''}">Idle build</button><button data-build="boss" class="${state.build==='boss'?'active':''}">Boss build</button></div><p class="tiny muted">${state.build==='idle'?'All equipped spells cast automatically.':'Separate from idle. Set autocast in boss preparation.'} Up to four spells.</p>${slots(state.build)}`:`<div class="selected-familiar">${sprite(familiar(state.familiar).art)}<div><strong>${esc(familiar(state.familiar).name)}</strong><span class="tiny gold">${familiar(state.familiar).buff} · Boss only</span></div></div><p class="tiny muted">Choose one passive boss ally. No idle buffs.</p>`}${collectionTools(kind)}<div id="collection-results">${grid(kind)}</div></section>`;
+}
+function bossView() {
+    return `<section class="page">${title('Before the battle',`${realms[state.realm].toUpperCase()} REALM · BOSS 1-6`)}<div class="row panel">${sprite('golem')}<div><h3>${bosses[state.realm]}</h3><span class="tiny muted">90 seconds · Free attempts<br>One victory per boss</span></div></div><span class="kicker">YOUR BOSS BUILD · FOUR SLOTS</span>${slots('boss',true)}<div class="note">${gate()?'Your mage keeps farming at 1-5 until you enter.':state.won[state.realm]?'This boss is already defeated. It cannot be replayed.':`Clear farming levels 1-1–1-5 to reach this boss. Current: 1-${state.levels[state.realm]}.`}</div><span class="kicker">ONE FAMILIAR · PASSIVE BOSS BUFF</span><div class="selected-familiar">${sprite(familiar(state.familiar).art)}<div><strong>${esc(familiar(state.familiar).name)}</strong><span class="tiny gold">${familiar(state.familiar).buff}</span></div></div>${btn('Choose familiar','chooseFamiliar',true)}<div class="detail-stats"><div>Health in this fight<b>${Math.round((100+state.hpBonus)*(state.familiar%2===0?1.1:1))} HP</b></div><div>Spell damage<b>${Math.round((state.boss.reduce((n,s)=>n+spell(s).damage,0)+state.damageBonus)*(state.familiar%2?1.08:1))}</b></div></div>${btn('Enter the boss arena · 1-6','startFight',false,!gate()||!state.boss.length)}<p class="tiny muted center" style="margin-top:12px">Move to dodge. Tap manual spells to cast.<br>Permanent progression stays with you after a loss.</p></section>`;
+}
+function forgeView() {
+    return `<section class="page">${title('The Spellforge',`FORGE LEVEL ${state.forgeLevel}`)}<div class="panel venture-art">${sprite('workshop')}<div><h3>Learn. Combine.<br>Discover.</h3><span class="tiny muted">Original spells always stay.</span></div></div><div class="tabs"><button data-forge-tab="craft" class="${state.forgeTab!=='fusion'?'active':''}">Shard crafting</button><button data-forge-tab="fusion" class="${state.forgeTab==='fusion'?'active':''}">Fusion</button></div>${state.forgeTab!=='fusion'?`<p class="tiny muted">Choose a spell from the grid to inspect its recipe.</p><div class="collection-grid">${spells.slice(0,2).map((s,id)=>`<button class="collection-card ${state.unlocked.includes(s.name)?'selected':''}" data-craft-card="${id}">${sprite(s.art)}<strong>${s.name}</strong><small>${state.unlocked.includes(s.name)?'Unlocked':'5 ice-shards'}</small></button>`).join('')}</div>`:`<div class="recipe-grid">${spells.map((s,id)=>`<button class="collection-card" data-craft-card="${id}">${sprite(id===2&&!state.unlocked.includes(s.name)?'shards':s.art)}<strong>${id===2&&!state.unlocked.includes(s.name)?'Unknown result':s.name}</strong><small>${id===2?'Fused spell':'Ingredient · kept'}</small></button>`).join('')}</div><p class="tiny muted center">Firebolt + Icebolt → a new discovery</p><div class="note">Forge level 2 opens after the Ice boss. Its fixed reward covers the upgrade and first fusion.</div>${state.forgeLevel<2?btn('Upgrade forge · 10 fire-shards','upgradeForge',false,!state.won[1]):btn(state.unlocked.includes('Frostfire Bolt')?'Frostfire Bolt discovered':'Forge unknown spell · 10 fire-shards','fuse',false,state.unlocked.includes('Frostfire Bolt')||!state.unlocked.includes('Icebolt')||state.shards[0]<10)}`}<p class="tiny muted" style="margin-top:15px">${state.shards[0]} fire-shards · Illustrative forge costs</p></section>`;
+}
+function venturesView() {
+    return `<section class="page">${title('Your settlement','VENTURES · PERMANENT GROWTH')}<section class="panel"><div class="venture-art">${sprite('mine')}<div><h3>Moonstone mine</h3><span class="kicker">LEVEL ${state.mining}</span><div class="venture-value">${(state.mining*5*1.2*(state.synergy?1.25:1)).toFixed(1)} <small>ore / min</small></div></div></div><div class="venture-workers">${sprite('spirit')}<span>${state.mining} base spirits<br>Always working</span><span>2 loot-spirits<br>+20% combined</span></div><p class="venture-formula">${state.mining*5} base × 1.20 spirits × ${state.synergy?'1.25':'1.00'} pond</p><div class="stack">${btn('+5 Spell damage · 40 ore','buyDamage',false,state.ore<40)}${btn('Mine level +1 · 60 ore','upgradeMine',true,state.ore<60)}</div></section><section class="panel"><div class="venture-art">${sprite('pond')}<div><h3>Silverfin pond</h3><span class="kicker">LEVEL ${state.fishing}</span><div class="venture-value">8 <small>pearls / min</small></div></div></div><div class="venture-workers">${sprite('spirit')}<span>${state.fishing} base spirit<br>Always working</span><span>No loot-spirits yet</span></div><div class="stack">${btn('+10 permanent HP · 30 pearls','buyHp',false,state.pearls<30)}${btn(state.synergy?'Mine synergy ×1.25 · Active':'Mine synergy · 50 pearls','synergy',true,state.synergy||state.pearls<50)}</div></section><div class="note">Every collected loot-spirit contributes, including duplicates. Familiars are separate boss companions.</div></section>`;
+}
+function fightView() {
+    const f = state.fight;
+    return `<section class="fight-page"><header class="fight-head"><div class="row between"><h2>${bosses[state.realm]}</h2><strong class="gold">${90-f.elapsed}s</strong></div><div class="boss-track" aria-label="Boss health"><i style="width:${f.bossHp/600*100}%"></i></div><span class="tiny muted">${Math.ceil(f.bossHp)} / 600 HP · ${familiar(state.familiar).buff} active</span></header><div class="fight-arena" aria-label="Drag or tap to move the mage">${scenery()}${sprite('golem','boss-actor')}<div class="danger" aria-hidden="true"></div><span class="fight-mage" style="left:${f.x}%;top:${f.y}%">${sprite('mage')}</span><div class="arena-hint">Drag or tap to move · Dodge the marked area</div></div><section class="fight-bottom"><div class="slots">${Array.from({length:4},(_,i)=>state.boss[i]?`<button class="cast-button" data-cast="${i}" ${f.cooldowns[i]>0||state.autos[i]?'disabled':''}>${sprite(spell(state.boss[i]).art)}<span>${f.cooldowns[i]>0?f.cooldowns[i]+'s':state.autos[i]?'Auto':'Cast'}</span></button>`:`<div class="spell-icon empty">+</div>`).join('')}</div><button class="text-button" data-action="retreat">Leave attempt · Retry for free</button></section></section>`;
+}
+function resultView() {
+    const won = state.fight.result==='win';
+    return `<section class="page center">${sprite(won?'portal':'moth','result-art')}${title(won?'A new path opens.':'Another try awaits.',won?'BOSS DEFEATED':'ATTEMPT ENDED')}<p class="muted">${bosses[state.fight.realm]}</p><div class="panel">${won?`<h3>${state.fight.realm<3?realms[state.fight.realm+1]+' realm · 1-1 unlocked':'All four realms conquered'}</h3><p class="tiny">Fixed reward: 20 ${realms[state.fight.realm].toLowerCase()}-shards${state.fight.realm===1?' + 20 fire-shards + forge level 2 access':''}.<br>Boss rewards granted once. Permanent spells kept.</p>`:'<h3>Your progression is safe.</h3><p class="tiny">No resources lost. No retry fee.<br>Return to farming at 1-5 or try a new boss build.</p>'}</div><div class="stack">${won?btn(state.fight.realm<3?`Enter ${realms[state.fight.realm+1]} realm · 1-1`:'Return to farming','continue'):btn('Prepare a free retry','boss')}${btn('Visit the Spellforge','forge',true)}</div></section>`;
+}
+function returnView() {
+    const report = state.returned;
+    return `<section class="page">${title('While you were away','RETURN · SIMULATED PREVIEW')}${sprite('mage','result-art')}<div class="panel"><h3>${report?report.hours:'20'} hours away.<br>${report?Math.min(12,report.hours):12} hours of progress.</h3><div class="return-line"><span>Counted time</span><b>${report?Math.min(12,report.hours):12}h / 12h maximum</b></div><div class="return-line"><span>${realms[state.realm]} shards</span><b>+${report?.shards||0}</b></div><div class="return-line"><span>Moonstone ore</span><b>+${report?.ore||0}</b></div><div class="return-line"><span>Silverfin pearls</span><b>+${report?.pearls||0}</b></div><div class="return-line"><span>Farming progress</span><b>${report?.start||'1-1'} → 1-${state.levels[state.realm]}</b></div></div><div class="note">${state.returnClaimed?'This return has already been collected. No duplicate rewards.':report?'Boss 1-6 was not entered. Your mage kept farming at 1-5 until the 12-hour window ended.':'Use the return scenario to preview 20 hours away.'}</div>${btn(state.returnClaimed?'Collected · Back to farming':'Collect and continue','claimReturn',false,!report&&!state.returnClaimed)}<p class="tiny muted center" style="margin-top:15px">The same time window applies to the mage and both ventures in parallel.</p></section>`;
+}
+function accountView() {
+    return `<section class="page">${title('Your journey','ACCOUNT · PREVIEW ONLY')}${sprite('portal','result-art')}<div class="panel"><h3>Platform account</h3><p class="tiny muted">Cloud save and same-platform restoration belong here. This prototype only keeps state in memory.</p></div>${btn('Simulate connection loss','disconnect',true)}<div class="note">Active play requires a connection. Reconnecting restores the locally confirmed prototype state.</div>${btn('Review idle return','return',true)}</section>`;
+}
+const views = {realm:realmView,library:libraryView,boss:bossView,forge:forgeView,ventures:venturesView,fight:fightView,result:resultView,return:returnView,account:accountView};
+function modalView() {
+    if (!state.modal) return '';
+    let body = '', heading = '';
+    const m = state.modal;
+    if (m.type==='menu') {
+        heading = 'Your journey';
+        body = `<div class="stack">${btn('Choose realm and farming level','map',true)}${btn('Spells & familiars','library',true)}${btn('Account & connection','account',true)}${btn('Return summary','return',true)}</div><h4>Resources</h4><p class="tiny muted">F◆ Fire · I◆ Ice · E◆ Earth · W◆ Wind · ▨ Ore · ● Pearls</p><p class="tiny">Shard initials: F = Fire, I = Ice, E = Earth, W = Wind. Resource counts stay visible in every view.</p><h4>Prototype controls</h4><p class="tiny muted">Accelerated simulation · No progress saved</p><div class="stack">${[['start','Fire realm · 1-1'],['gate','At the boss gate · 1-5'],['ice','Ice realm · Craft Icebolt'],['collection','Sample collection · 240 familiars'],['return','Away for 20 hours']].map(([key,label])=>`<button class="rune-button secondary" data-scenario="${key}">${label}</button>`).join('')}${btn('Advance a farming level','advance',true)}${btn('Show boss victory','demoWin',true)}${btn('Show boss defeat','demoLose',true)}${btn('Reach 12-hour cap','demoCap',true)}</div>`;
+    } else if (m.type==='map') {
+        heading = 'The four realms';
+        body = `<p class="tiny muted">Each realm starts at 1-1. Clear five farming levels, then face boss 1-6.</p>${realms.map((r,i)=>`<button class="realm-choice" data-realm="${i}" ${!canVisit(i)?'disabled':''} ${state.realm===i?'aria-current="true"':''}>${sprite(['fire','ice','spirit','portal'][i])}<span><strong>${r} realm</strong><small>${state.won[i]?'Boss defeated · Revisit farming':canVisit(i)?`Reached 1-${state.levels[i]} · Boss at 1-6`:'Defeat the '+realms[i-1]+' boss'}</small></span><span>${canVisit(i)?'→':'⊘'}</span></button>`).join('')}<h4>Choose a cleared farming level</h4><div class="stage-track">${[1,2,3,4,5].map(l=>`<button class="text-button stage ${l===state.levels[state.realm]?'current':''}" data-level="${l}" ${l>Math.min(5,state.cleared[state.realm]+1)?'disabled':''}>1-${l}</button>`).join('')}</div><p class="tiny muted">Choosing an earlier level holds farming there. Return to the furthest reached level to resume auto-progress.</p>`;
+    } else if (m.type==='picker') {
+        heading = m.kind==='spells'?`Choose spell · Slot ${m.slot+1}`:'Choose one familiar';
+        body = `${m.kind==='spells'?'<p class="tiny muted">Choose an unlocked spell from the grid. Other slots are kept.</p>':'<p class="tiny muted">Passive buffs apply only during boss fights.</p>'}${collectionTools(m.kind)}<div id="collection-results">${grid(m.kind,true)}</div>${m.kind==='spells'&&state[m.build][m.slot]?btn('Remove this spell','removeSlot',true):''}`;
+    } else if (m.type==='card') {
+        const item = m.kind==='spells'?spells[m.id]:familiar(m.id);
+        heading = item.name;
+        const unlocked = state.unlocked.includes(item.name);
+        body = `<div class="detail-art">${sprite(item.art)}</div>${m.kind==='familiars'?`<p class="gold center">${item.buff} · Boss fights only</p><p class="tiny muted">One familiar at a time. No active spells or idle bonuses. This collection uses illustrative sample entries.</p>${btn(state.familiar===item.id?'Selected for boss fights':'Select for boss fights','selectFamiliar',false,state.familiar===item.id)}`:`<p class="tiny muted">${item.description}</p><div class="detail-stats"><div>Spell damage<b>${item.damage}</b></div><div>Cooldown<b>${item.cooldown}s</b></div></div>${unlocked?btn(state[state.build].includes(item.name)?`Remove from ${state.build} build`:`Equip in ${state.build} build`,'equipSpell'):item.name==='Icebolt'?btn('Craft Icebolt · 5 ice-shards','craftIce',false,state.shards[1]<5||!state.won[0]):btn('Inspect fusion recipe','inspectFusion',true)}`}`;
+    }
+    return `<div class="overlay"><section class="sheet" role="dialog" aria-modal="true" aria-label="${esc(heading)}"><div class="row between" style="margin-bottom:12px"><h3>${esc(heading)}</h3><button class="sheet-close" data-action="close" aria-label="Close dialog">×</button></div>${body}</section></div>`;
+}
+function inspector() {
+    document.querySelector('#state').textContent = JSON.stringify({variant,view:state.view,realm:realms[state.realm],level:'1-'+state.levels[state.realm],bossGate:gate(),won:state.won,idle:state.idle,boss:state.boss,autos:state.autos,familiar:familiar(state.familiar).name,shards:state.shards,ore:state.ore,pearls:state.pearls,countedHours:state.seconds/3600,cap:atCap(),returnClaimed:state.returnClaimed,collectionSize:state.largeCollection?240:2},null,2);
+}
+function render(preserveScroll=false) {
+    const scroll = preserveScroll ? phone.querySelector('.game-content')?.scrollTop || 0 : 0;
+    phone.innerHTML = hud()+`<div class="game-content">${(views[state.view]||realmView)()}</div>`+(state.view==='fight'?'':nav())+modalView()+(toastText?`<div class="toast" role="status">${esc(toastText)}</div>`:'')+(!state.connected?`<section class="blocking"><h2>Connection lost</h2><p class="muted">Active play is paused. Reconnect to continue from your confirmed progress.</p>${btn('Reconnect','reconnect')}</section>`:'');
+    phone.querySelector('.game-content').scrollTop=scroll;
+    phone.style.setProperty('--hud-height',phone.querySelector('.hud').offsetHeight+'px');
+    document.querySelector('#variant-label').textContent = variant+' · '+variants[variant];
+    document.querySelector('#review-links').innerHTML = ['realm','forge','boss','ventures','library','return','account'].map(v=>`<button data-view="${v}">${({library:'Collection',return:'Return'})[v]||v[0].toUpperCase()+v.slice(1)}</button>`).join('');
+    inspector();
+    if(state.modal)phone.querySelector('.sheet-close')?.focus({preventScroll:true});
+}
+function refreshHud() {
+    phone.querySelector('.hud').outerHTML = hud();
+    phone.style.setProperty('--hud-height',phone.querySelector('.hud').offsetHeight+'px');
+}
+function notify(message) {
+    toastText=message; clearTimeout(toastTimer); render(true);
+    toastTimer=setTimeout(()=>{toastText='';phone.querySelector('.toast')?.remove();},3000);
+}
+function go(view) { state.view=view;state.modal=null;render(); }
+function openModal(modal) { lastFocus=document.activeElement;state.modal=modal;render(true);phone.querySelector('.sheet-close')?.focus(); }
+function closeModal() {state.modal=null;render(true);if(lastFocus?.dataset.action)phone.querySelector(`[data-action="${lastFocus.dataset.action}"]`)?.focus();}
+function scenario(key) {
+    state=fresh();toastText='';
+    if(key==='gate'){state.levels[0]=5;state.cleared[0]=5;state.shards[0]=35;}
+    if(key==='ice'){state.won[0]=true;state.cleared[0]=6;state.levels[0]=5;state.realm=1;state.shards[1]=5;}
+    if(key==='collection'){state.largeCollection=true;state.view='library';state.collectionTab='familiars';}
+    if(key==='return'){
+        state.levels[0]=5;state.cleared[0]=5;state.seconds=43200;state.returnPending=true;state.view='return';
+        state.returned={hours:20,start:'1-1',shards:Math.round(.6*43200),ore:Math.round(15*720),pearls:8*720};
+    }
+    render();
+}
+function advance() {
+    if(atCap()||state.won[state.realm]||state.heldLevel) return;
+    const r=state.realm;state.cleared[r]=Math.max(state.cleared[r],state.levels[r]);state.stageKills=0;
+    if(state.levels[r]<5)state.levels[r]++;else state.cleared[r]=5;
+}
+function startFight() {
+    if(!gate()||!state.boss.length)return;
+    state.view='fight';state.modal=null;
+    state.fight={realm:state.realm,elapsed:0,bossHp:600,hp:hpMax(),cooldowns:[0,0,0,0],x:52,y:72,result:null};
+    render();
+}
+function finishFight(won,force=false) {
+    if(force&&state.view!=='fight'){
+        if(state.won[state.realm])return notify('This boss has already been defeated.');
+        state.levels[state.realm]=5;state.cleared[state.realm]=5;startFight();
+    }
+    const f=state.fight;if(!f||f.result)return;
+    f.result=won?'win':'loss';
+    if(won&&!state.won[f.realm]){
+        state.won[f.realm]=true;state.cleared[f.realm]=6;state.shards[f.realm]+=20;
+        if(f.realm===1)state.shards[0]+=20;
+    }
+    go('result');
+}
+function cast(i) {
+    const f=state.fight,s=spell(state.boss[i]);
+    if(!f||f.result||!s||f.cooldowns[i]>0)return;
+    f.bossHp=Math.max(0,f.bossHp-Math.round((s.damage+state.damageBonus)*(state.familiar%2?1.08:1)));
+    f.cooldowns[i]=s.cooldown;
+    if(!f.bossHp)finishFight(true);
+}
+const actions={
+    menu:()=>openModal({type:'menu'}),map:()=>openModal({type:'map'}),close:closeModal,
+    realm:()=>go('realm'),forge:()=>go('forge'),boss:()=>go('boss'),library:()=>go('library'),account:()=>go('account'),return:()=>go('return'),
+    idleBuild:()=>{state.collectionTab='spells';state.build='idle';go('library');},
+    chooseFamiliar:()=>openModal({type:'picker',kind:'familiars'}),
+    startFight,retreat:()=>finishFight(false),
+    nextRealm:()=>{if(state.realm<3&&state.won[state.realm]){state.realm++;state.stageKills=0;state.heldLevel=false;go('realm');}},
+    continue:()=>{if(state.fight.realm<3){state.realm=state.fight.realm+1;state.stageKills=0;state.heldLevel=false;}go('realm');},
+    advance:()=>{state.modal=null;advance();render(true);},demoWin:()=>finishFight(true,true),demoLose:()=>finishFight(false,true),demoCap:()=>{state.seconds=43200;state.modal=null;render();},
+    selectFamiliar:()=>{state.familiar=state.modal.id;state.modal=null;notify('Selected for boss fights. Your idle stats stay the same.');},
+    equipSpell:()=>{
+        const name=spells[state.modal.id].name,build=state[state.build];
+        if(build.includes(name))state[state.build]=build.filter(n=>n!==name);else if(build.length<4)build.push(name);else return notify('Four slots are full. Remove a spell first.');
+        state.modal=null;notify('Your '+state.build+' build has been updated.');
+    },
+    removeSlot:()=>{state[state.modal.build].splice(state.modal.slot,1);state.modal=null;render(true);},
+    craftIce:()=>{
+        if(state.shards[1]<5||state.unlocked.includes('Icebolt')||!state.won[0])return;
+        state.shards[1]-=5;state.unlocked.push('Icebolt');state.modal=null;state.build='idle';state.collectionTab='spells';state.view='library';notify('Icebolt unlocked. Select it in the grid to add it to your idle build.');
+    },
+    inspectFusion:()=>{state.forgeTab='fusion';go('forge');},
+    upgradeForge:()=>{if(!state.won[1]||state.forgeLevel>=2||state.shards[0]<10)return;state.shards[0]-=10;state.forgeLevel=2;notify('Forge level 2 unlocked. The remaining reward covers your first fusion.');},
+    fuse:()=>{if(state.forgeLevel<2||state.shards[0]<10||!state.unlocked.includes('Icebolt')||state.unlocked.includes('Frostfire Bolt'))return;state.shards[0]-=10;state.unlocked.push('Frostfire Bolt');notify('Frostfire Bolt discovered. Firebolt and Icebolt are kept.');},
+    buyDamage:()=>{if(state.ore<40)return;state.ore-=40;state.damageBonus+=5;notify('Permanent Spell damage +5.');},
+    buyHp:()=>{if(state.pearls<30)return;state.pearls-=30;state.hpBonus+=10;notify('Permanent HP +10.');},
+    upgradeMine:()=>{if(state.ore<60)return;state.ore-=60;state.mining++;render(true);},
+    synergy:()=>{if(state.synergy||state.pearls<50)return;state.pearls-=50;state.synergy=true;render(true);},
+    claimReturn:()=>{
+        if(state.returnClaimed)return go('realm');
+        if(!state.returned||!state.returnPending)return;
+        state.shards[state.realm]+=state.returned.shards;state.ore+=state.returned.ore;state.pearls+=state.returned.pearls;state.returnClaimed=true;state.returnPending=false;
+        state.seconds=0;notify('12 hours collected once. A new idle window begins.');
+    },
+    resetWindow:()=>{state.seconds=0;notify('A new idle window begins. Previously earned resources are kept.');},
+    disconnect:()=>{state.connected=false;render();},reconnect:()=>{state.connected=true;notify('Reconnected. Confirmed prototype progress restored.');}
+};
+function handleClick(event) {
+    const el=event.target.closest('button');if(!el||el.disabled)return;
+    if(el.dataset.scenario)return scenario(el.dataset.scenario);
+    if(el.dataset.demo){if(el.dataset.demo==='advance'){advance();render(true);}else if(el.dataset.demo==='cap'){state.seconds=43200;render(true);}else finishFight(el.dataset.demo==='win',true);return;}
+    if(!state.connected&&el.dataset.action!=='reconnect')return;
+    if(el.dataset.action){actions[el.dataset.action]?.();return;}
+    if(el.dataset.view)return go(el.dataset.view);
+    if(el.dataset.realm!==undefined){state.realm=Number(el.dataset.realm);state.stageKills=0;state.heldLevel=false;return go('realm');}
+    if(el.dataset.level){const level=Number(el.dataset.level);state.heldLevel=level<Math.min(5,state.cleared[state.realm]+1);state.levels[state.realm]=level;state.stageKills=0;return go('realm');}
+    if(el.dataset.tab){state.collectionTab=el.dataset.tab;return render();}
+    if(el.dataset.slot!==undefined){state.build=el.dataset.build;return openModal({type:'picker',kind:'spells',slot:Number(el.dataset.slot),build:el.dataset.build});}
+    if(el.dataset.build){state.build=el.dataset.build;return render();}
+    if(el.dataset.auto!==undefined){const i=Number(el.dataset.auto);state.autos[i]=!state.autos[i];return render(true);}
+    if(el.dataset.card){
+        const kind=el.dataset.card,id=Number(el.dataset.id);
+        if(state.modal?.type==='picker'&&kind==='spells'){
+            const name=spells[id].name;if(!state.unlocked.includes(name))return notify('Unlock this spell at the Spellforge first.');
+            const m=state.modal,build=state[m.build];
+            if(build.includes(name)&&build[m.slot]!==name)return notify('This spell is already equipped in another slot.');
+            build[Math.min(m.slot,build.length)]=name;state.modal=null;return notify('Boss and idle builds are saved separately in this preview.');
+        }
+        return openModal({type:'card',kind,id});
+    }
+    if(el.dataset.page){state.pages[el.dataset.kind]+=Number(el.dataset.page);refreshCollection();return;}
+    if(el.dataset.craftCard!==undefined)return openModal({type:'card',kind:'spells',id:Number(el.dataset.craftCard)});
+    if(el.dataset.forgeTab){state.forgeTab=el.dataset.forgeTab;return render(true);}
+    if(el.dataset.cast!==undefined){cast(Number(el.dataset.cast));return render(true);}
+}
+function refreshCollection() {
+    const kind=state.modal?.kind||state.collectionTab;
+    const results=phone.querySelector('#collection-results');if(results)results.innerHTML=grid(kind,state.modal?.type==='picker');inspector();
+}
+document.addEventListener('click',handleClick);
+document.addEventListener('input',event=>{const kind=event.target.dataset.search;if(kind){state.queries[kind]=event.target.value;state.pages[kind]=0;refreshCollection();}});
+document.addEventListener('change',event=>{const kind=event.target.dataset.filter;if(kind){state.filters[kind]=event.target.value;state.pages[kind]=0;refreshCollection();}});
+function switchVariant(delta) {
+    const keys=Object.keys(variants);variant=keys[(keys.indexOf(variant)+delta+keys.length)%keys.length];
+    const url=new URL(location.href);url.searchParams.set('variant',variant);history.replaceState(null,'',url);render(true);
+}
+document.querySelector('#previous').onclick=()=>switchVariant(-1);
+document.querySelector('#next').onclick=()=>switchVariant(1);
+document.addEventListener('keydown',event=>{
+    if(state.modal&&event.key==='Escape'){event.preventDefault();closeModal();return;}
+    if(state.modal&&event.key==='Tab'){
+        const focusables=[...phone.querySelectorAll('.sheet button:not(:disabled),.sheet input,.sheet select,.sheet a')];
+        const first=focusables[0],last=focusables.at(-1);
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}return;
+    }
+    if(event.target.closest('input,textarea,select,[contenteditable="true"]')||state.view==='fight'||state.modal)return;
+    if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();switchVariant(event.key==='ArrowLeft'?-1:1);}
+});
+window.addEventListener('popstate',()=>{variant=variants[new URLSearchParams(location.search).get('variant')]?new URLSearchParams(location.search).get('variant'):'A';render(true);});
+let dragging=false;
+function moveMage(event) {
+    const arena=event.target.closest('.fight-arena');if(!arena||state.view!=='fight'||!state.connected)return;
+    const box=arena.getBoundingClientRect();state.fight.x=Math.max(8,Math.min(92,(event.clientX-box.left)/box.width*100));state.fight.y=Math.max(40,Math.min(88,(event.clientY-box.top)/box.height*100));
+    const mage=arena.querySelector('.fight-mage');mage.style.left=state.fight.x+'%';mage.style.top=state.fight.y+'%';
+}
+phone.addEventListener('pointerdown',event=>{if(event.target.closest('.fight-arena')){dragging=true;event.target.closest('.fight-arena').setPointerCapture(event.pointerId);moveMage(event);}});
+phone.addEventListener('pointermove',event=>{if(dragging)moveMage(event);});
+phone.addEventListener('pointerup',()=>{dragging=false;});
+phone.addEventListener('pointercancel',()=>{dragging=false;});
+let tick=0;
+setInterval(()=>{
+    if(!state.connected||document.hidden||state.returnPending)return;
+    if(state.view==='fight'){
+        const f=state.fight;if(f.result)return;
+        f.elapsed++;if(f.elapsed>=90)return finishFight(false);
+        f.cooldowns=f.cooldowns.map(c=>Math.max(0,c-1));
+        state.boss.forEach((_,i)=>{if(state.autos[i])cast(i);});
+        if(f.result)return;
+        if(f.elapsed%5===0){f.hp=Math.max(0,f.hp-(f.x<48&&f.y>53?18:4));if(!f.hp)return finishFight(false);}
+        render(true);return;
+    }
+    if(atCap())return;
+    state.seconds++;tick++;
+    if(tick%60===0){state.ore+=Math.round(state.mining*5*1.2*(state.synergy?1.25:1));state.pearls+=8;}
+    if(tick%2===0){
+        state.enemyHp-=power();
+        if(state.enemyHp<=0){state.enemyHp=40;state.kills++;state.shards[state.realm]++;state.stageKills++;if(state.stageKills>=3&&!state.heldLevel&&!state.won[state.realm])advance();}
+        refreshHud();
+        if(state.view==='realm'&&!state.modal){
+            const scene=phone.querySelector('.scene'),oldText=phone.querySelector('.damage-float');
+            if(scene){const actor=scene.querySelector('.actor.mage');actor.querySelector('.sprite').outerHTML=sprite('casting');setTimeout(()=>{if(actor.isConnected)actor.querySelector('.sprite').outerHTML=sprite('mage');},450);oldText.textContent=state.enemyHp===40?'+1 shard':power();scene.querySelector('.shot').classList.remove('shoot');void scene.offsetWidth;scene.querySelector('.shot').classList.add('shoot');}
+            phone.querySelector('.journey-sheet').outerHTML=new DOMParser().parseFromString(realmView(),'text/html').querySelector('.journey-sheet').outerHTML;
+            phone.querySelector('.enemy-hp i').style.width=state.enemyHp/40*100+'%';
+            phone.querySelector('.scene-foot span:last-child').textContent=state.kills+' monsters defeated';
+            phone.querySelector('.idle-label').innerHTML='<span>●</span> '+(gate()?'FARMING AT THE BOSS GATE':'IDLE COMBAT');
+            phone.querySelector('.realm-location .kicker').textContent=realms[state.realm].toUpperCase()+' REALM · 1-'+state.levels[state.realm];
+        }
+    }
+    if(atCap())render(true);inspector();
+},1000);
+document.querySelector('.prototype-switcher').hidden = false; // Public prototype review build.
+render();

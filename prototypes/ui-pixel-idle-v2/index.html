@@ -1,0 +1,45 @@
+<!doctype html>
+<!-- THROWAWAY v2: Three compact HUD compositions on the established pixel-idle layout.
+     Question: can persistent stats stay legible while the world and large collections gain space? -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Pixel idle / 02</title>
+    <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 02</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>Mer värld.<br>Magin inom räckhåll.</h1>
+            <p class="intro">En mindre header. En resa i sex steg. En samling som får växa.</p>
+            <div class="design-note"><span class="eyebrow">REKOMMENDATION / A</span><h2>Den kompakta resurslisten</h2><p>Alla sex resurser syns överst. HP och Spell damage ligger direkt under. Samma plats i varje vy, även vid scroll och val.</p></div>
+            <p class="eyebrow">PROVA ETT ÖGONBLICK</p>
+            <div class="scenario-buttons">
+                <button data-scenario="start">01 / Fire realm · 1-1</button>
+                <button data-scenario="gate">02 / Vid bossgrinden · 1-5</button>
+                <button data-scenario="ice">03 / Ice realm · Icebolt</button>
+                <button data-scenario="collection">04 / 240 familiars</button>
+                <button data-scenario="return">05 / Borta i 20 timmar</button>
+            </div>
+            <p class="fine">Klickbar skiss · <a href="https://github.com/Tiico/untitled-mage-game/issues/4" target="_blank" rel="noopener">Uppgift #4</a><br>Illustrativa värden. Inga sparade ändringar.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>V2 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">ATT TA STÄLLNING TILL</p><h2>Tar världen plats igen?</h2>
+            <ol class="review-points"><li><strong>Alltid orienterad</strong><p>Går resurser, HP och styrka att läsa utan att headern tar över?</p></li><li><strong>En begriplig bossgrind</strong><p>Förstår man att 1-5 fortsätter ge loot medan 1-6 kräver ett aktivt försök?</p></li><li><strong>En växande samling</strong><p>Är grids, sökning och detaljval tydliga även med hundratals familiars?</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine">Spell power visas som <b>Spell damage</b> enligt projektets begrepp.<br>Ny illustrativ samlingsdata är ingen beslutad innehållskatalog.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Headerstudier"><span>HUD-STUDIE</span><button id="previous" aria-label="Föregående header">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa header">→</button></nav>
+    <script src="prototype.js"></script>
+</body>
+</html>

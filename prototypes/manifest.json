@@ -6,8 +6,8 @@
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
       "prototype.js": "11614b4f5b71b293450f632c5ade15b345634541682b419ac8853de8bf82547b"
     },
-    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0",
-    "query": "?variant=A"
+    "query": "?variant=A",
+    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0"
   },
   {
     "id": "ui-painted-v1",
@@ -18,8 +18,8 @@
       "fantasy.css": "1d2c63754b4741de2946ce9212befa4668ce4830323ad8e506fdf1684d4e8641",
       "assets/hushed-glacier-fantasy.png": "34567658e4d286b60634951761595bf22e7470befa3352928f0f15704b28b7a6"
     },
-    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d",
-    "query": "?variant=A&art=fantasy"
+    "query": "?variant=A&art=fantasy",
+    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d"
   },
   {
     "id": "ui-pixel-idle-v1",
@@ -35,8 +35,8 @@
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
     },
-    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727",
-    "query": "?variant=A&art=pixel"
+    "query": "?variant=A&art=pixel",
+    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727"
   },
   {
     "id": "spell-workspace-v1",
@@ -49,7 +49,20 @@
       "analysis.mjs": "6b207c42f923ff4e2a6663f44f5c07adaacf5d0cc2929a6f9ffe6da8f74971c8",
       "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322"
     },
-    "sourceCommit": "32c2b2e0507aae7a96834c04d94491fde540c583",
-    "query": "?spell=frostfire&stage=4&view=map"
+    "query": "?spell=frostfire&stage=4&view=map",
+    "sourceCommit": "32c2b2e0507aae7a96834c04d94491fde540c583"
+  },
+  {
+    "id": "ui-pixel-idle-v2",
+    "files": {
+      "index.html": "b330345d4af6602d36a7f29bcf7821db591975e42bd4dabfff6d924b82146c8d",
+      "prototype.css": "9a93ed199f733174e64817e854c06420c58e8b5bba058aaaafec48075faa813e",
+      "prototype.js": "047d76cca80a77c6c18a60b73a3f229ce5536674ffa303a4f34227f9d3540016",
+      "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322",
+      "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
+      "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
+    },
+    "query": "?variant=A",
+    "sourceCommit": "df8a0822ce95d398e4c5a58b0c3293849317ce04"
   }
 ]
