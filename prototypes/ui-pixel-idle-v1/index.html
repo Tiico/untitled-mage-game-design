@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- THROWAWAY: Three structurally different portrait UI variants, ?variant=A|B|C.
+     Question: world, grimoire, or console — which makes the progression loop legible?
+     No production integration, persistence, dependencies, or network mutations. -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="color-scheme" content="dark light">
+    <title>Mage / Interface studies</title>
+    <link rel="stylesheet" href="prototype.css">
+    <link rel="stylesheet" href="fantasy.css?v=2">
+    <link rel="stylesheet" href="pixel.css?v=3">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="?variant=A"><span class="brand-rune">✧</span> MAGE <span>DESIGN STUDIES / 01</span></a>
+            <div class="eyebrow">UNTITLED MAGE GAME</div>
+            <h1>Ett litet fönster.<br>En större värld.</h1>
+            <p class="intro">Tre sätt att göra samma magiska resa begriplig. Utforska gränssnittet, byt perspektiv och hitta det som känns rätt.</p>
+            <div id="variant-note"></div>
+            <div class="art-direction" id="art-direction"></div>
+            <div class="scenario-label">UTGÅNGSLÄGE</div>
+            <div class="scenario-buttons">
+                <button data-scenario="early">01 / Icebolt</button>
+                <button data-scenario="fusion">02 / Första fusionen</button>
+                <button data-scenario="return">03 / Återkomst</button>
+            </div>
+            <p class="fine">Klickbar skiss · PRD v1.2 · Inga sparade ändringar<br>Spelartexter på engelska enligt PRD:n.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device" id="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span class="live-dot"></span> PORTRAIT / INTERACTIVE STUDY <span>01—03</span></div>
+        </section>
+        <aside class="review">
+            <div class="eyebrow">ATT RESONERA KRING</div>
+            <h2 id="review-title"></h2>
+            <div id="review-points"></div>
+            <div class="review-rule"></div>
+            <div class="eyebrow">UTFORSKA FLÖDET</div>
+            <div class="view-links" id="view-links"></div>
+            <div id="demo-controls"></div>
+            <details class="inspector"><summary>Prototyptillstånd <span>↗</span></summary><pre id="state"></pre></details>
+            <p class="fine">Illustrativa värden och teman.<br>Ingen grafikstil eller balans är beslutad.</p>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Prototypvarianter">
+        <span class="switcher-tag">PROTOTYP</span>
+        <button id="previous" aria-label="Föregående variant">←</button>
+        <div id="variant-label"></div>
+        <button id="next" aria-label="Nästa variant">→</button>
+        <div class="variant-dots" id="variant-dots"></div>
+        <button class="art-toggle" id="art-toggle" aria-label="Jämför med originalets konststil">Original</button>
+    </nav>
+    <script src="pixel.js?v=3"></script>
+    <script src="prototype.js?v=pixel-4"></script>
+</body>
+</html>

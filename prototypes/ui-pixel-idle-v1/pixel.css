@@ -1,0 +1,155 @@
+/* THROWAWAY: pixel art, one palette, hard edges and consistent sprite cells. */
+#phone.pixel { --ink: #f0e6c8; --muted: #aeb4bc; --panel: #242c43; --line: #727589; --accent: #e4b968; --on-accent: #2c2432; color: var(--ink); background: #171d30; background-image: repeating-linear-gradient(0deg, #3f47671a 0 2px, transparent 2px 8px); font-family: 'Segoe UI', sans-serif; font-size: 12px; }
+.pixel *, .pixel *::before, .pixel *::after { border-radius: 0 !important; backdrop-filter: none !important; }
+.pixel .pixel-sprite { display: inline-block; flex-shrink: 0; width: 64px; height: 64px; background-image: url('assets/fantasy-pixel-atlas.png'); background-size: var(--sw) var(--sh); background-position: var(--sx) var(--sy); background-repeat: no-repeat; image-rendering: pixelated; vertical-align: middle; }
+.pixel .phone-header { padding: 15px 20px 12px; border-bottom: 2px solid #0f1528; background: #192238e8; box-shadow: 0 2px #727e8d55; height: 83px; }
+.pixel .phone-header h2 { margin: 8px 0 0; line-height: 1; overflow: visible; text-shadow: none; font-size: 20px; }
+.pixel .pixel-title { display: block; width: var(--title-width); max-width: 100%; height: 20px; fill: #ffe6ad; filter: drop-shadow(2px 2px #0c1225); }
+.pixel .pixel-title-text { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pixel .statusbar { color: #e9d9b7; background: #192238e8; }
+.pixel .round-button { height: 42px; width: 42px; background: #343c57; border: 2px solid #a3a1a7; color: #eac98f; box-shadow: inset 2px 2px #656b82, inset -2px -2px #171d31, 2px 2px #0c1427; }
+.pixel .overline { color: #e2be7a; font-size: 8px; letter-spacing: 1.2px; font-weight: 650; }
+.pixel .phone-scroll { inset: 121px 0 83px; padding: 15px 18px 24px; scrollbar-width: thin; scrollbar-color: #777b90 #171d30; }
+.pixel .section-title { font-family: 'Courier New', monospace; font-weight: 700; font-size: 17px; color: #f6e5b9; letter-spacing: -.5px; line-height: 1.35; }
+.pixel .result-title { font-family: 'Courier New', monospace; font-size: 26px; font-weight: 700; color: #ffe4ac; letter-spacing: -1px; }
+.pixel .panel { padding: 15px; border: 2px solid #73788d; background: #252e45; box-shadow: inset 2px 2px #444d65, inset -2px -2px #11192a, 3px 3px #0c1325; margin-bottom: 16px; }
+.pixel .primary, .pixel .secondary { min-height: 48px; font: 700 12px 'Courier New', monospace; border: 2px solid #f5db9c; background: #d5a557; color: #271f2e; box-shadow: inset 2px 2px #f4d28c, inset -2px -2px #96713f, 3px 3px #0a1123; text-shadow: none; padding: 12px; }
+.pixel .primary:hover { background: #e5b96e; }
+.pixel .primary:disabled { opacity: .6; }
+.pixel .secondary { background: #35415b; color: #e5d7b5; border-color: #8c94a4; box-shadow: inset 2px 2px #58657b, inset -2px -2px #1e2940, 3px 3px #0b1326; margin-top: 10px; }
+.pixel .small-button, .pixel .toggle { font: 11px 'Courier New', monospace; color: #eaddb9; border: 2px solid #778195; background: #313b56; box-shadow: inset 2px 2px #566077, inset -2px -2px #1b2539; }
+.pixel .toggle.on { color: #d2e9b5; background: #3c5d52; border-color: #8fae81; }
+.pixel .badge { border: 1px solid #87909e; color: #e3d6b8; background: #2a354bd9; padding: 5px 8px; font-size: 9px; letter-spacing: .1px; }
+.pixel .badge.gold { background: #594c39; border-color: #c6a463; color: #f2d594; }
+.pixel .measure { font-family: 'Courier New', monospace; font-weight: 700; color: #ffe0a0; font-size: 25px; letter-spacing: -1px; }
+.pixel .measure small { font-family: 'Segoe UI', sans-serif; font-weight: 400; font-size: 10px; color: #b2b9c6; letter-spacing: 0; }
+.pixel .tiny { color: #b9bfcc; font-size: 10px; line-height: 1.65; }
+.pixel .good { color: #bad393; }
+.pixel .note { background: #343944; border-left: 3px solid #c9a86c; color: #d3c8b1; font-size: 10px; }
+.pixel .soft-line { border-color: #6c758d; }
+.pixel .segmented { border: 2px solid #70788b; background: #111b2e; padding: 3px; gap: 4px; }
+.pixel .segmented button { min-height: 40px; font: 11px 'Courier New', monospace; color: #aeb8c8; }
+.pixel .segmented button.active { background: #444b5e; color: #ffe0a0; box-shadow: inset 2px 2px #687083, inset -2px -2px #242f43; }
+.pixel .spell-icon { background: #2c304b; border: 2px solid #b69362; box-shadow: inset 2px 2px #635049, inset -2px -2px #141c2c, 2px 2px #0d1425; overflow: hidden; }
+.pixel .spell-icon.ice { background: #253e53; border-color: #90bac4; box-shadow: inset 2px 2px #4f6c80, inset -2px -2px #122137, 2px 2px #0d1425; }
+.pixel .spell-icon.frost { background: #3d344d; border-color: #c9a6a6; box-shadow: inset 2px 2px #6b4e65, inset -2px -2px #211e38, 2px 2px #0d1425; }
+.pixel .spell-icon.empty, .pixel .spell-icon.unknown { background: #1b253a; border: 2px solid #54617b; box-shadow: inset 2px 2px #10182a; color: #aeb1af; font-size: 20px; }
+.pixel .spell-icon > .pixel-sprite { width: 100%; height: 100%; }
+.pixel .spell-row { border-color: #626c83; }
+.pixel .stats-two > div { border: 1px solid #666f84; background: #1c263b; }
+.pixel .recipe-orbit { min-height: 136px; margin-top: 12px; }
+.pixel .recipe-orbit::before { height: 116px; width: 116px; border: 2px dashed #b8a46b; transform: rotate(45deg); background: #44414c55; box-shadow: 0 0 0 8px #635b4c22; }
+.pixel .recipe-orbit .spell-icon { z-index: 1; width: 66px; height: 66px; }
+.pixel .loadout-slot > span:not(.spell-icon) { font-size: 8px; }
+.pixel .bottom-nav { background: #202b40; border-top: 3px solid #ac9470; box-shadow: 0 -2px #15192c, inset 0 2px #49526b; padding-top: 6px; }
+.pixel .bottom-nav button { color: #a6b1c3; font-size: 9px; }
+.pixel .bottom-nav button.active { color: #f7d78a; }
+.pixel .nav-icon { width: 30px; height: 28px; font-family: 'Courier New', monospace; font-size: 21px; text-shadow: 2px 2px #10192c !important; }
+.pixel .nav-icon .pixel-sprite { width: 34px; height: 34px; margin-top: -6px; }
+.pixel .bottom-nav button.active .nav-icon { background: #7c6a3b55; outline: 1px solid #bf9f62; }
+.pixel .toast { color: #f6dfaf; background: #2f4055; border: 2px solid #d3b278; box-shadow: inset 2px 2px #596174, 4px 4px #0a1327; font-size: 11px; }
+.pixel .menu-sheet { background: #263049; border: 2px solid #a8a2a0; box-shadow: inset 3px 3px #51596f; }
+.pixel .full-block { background: #151e32f5; }
+.pixel .full-block h3 { font-family: 'Courier New', monospace; color: #f4d395; font-weight: 700; }
+/* Idle is a stationary simulated fight, with separate scene and UI layers. */
+.pixel .pixel-world { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #4b6580; }
+.pixel .pixel-world img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.pixel .pixel-world::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#111d3355 0, transparent 30%, #121b3322 50%, #111b33b8 90%); }
+.pixel .other-realm-art { position: absolute; inset: 0; background-image: url('assets/other-realms-pixel.png'); background-repeat: no-repeat; background-size: 300% 100%; background-position: var(--realm-x) 0; image-rendering: pixelated; }
+.pixel .realm-fire .idle-enemy > .pixel-sprite { filter: hue-rotate(145deg); }
+.pixel .realm-earth .idle-enemy > .pixel-sprite { filter: hue-rotate(285deg); }
+.pixel .world-tools { top: 130px; left: 20px; right: 20px; }
+.pixel .world-tools .badge { border: 2px solid #afb3b9; color: #f8eac9; background: #263349e8; box-shadow: 2px 2px #10192b; padding: 6px 9px; }
+.pixel .pixel-map-button { min-height: 44px; font: 10px 'Courier New', monospace; margin-top: -5px; }
+.pixel .idle-stage { position: absolute; top: 180px; left: 14px; right: 14px; height: 188px; }
+.pixel .idle-combat-badge { font: 8px 'Courier New', monospace; color: #f5e8c4; letter-spacing: 1px; text-align: center; text-shadow: 2px 2px #1c2b48; }
+.pixel .combat-tick { display: inline-block; width: 4px; height: 4px; margin-left: 4px; background: #bee29a; box-shadow: 2px 2px #344d48; }
+.pixel .idle-mage { position: absolute; left: 13%; top: 39px; width: 94px; height: 106px; }
+.pixel .idle-mage > .pixel-sprite { width: 96px; height: 96px; }
+.pixel .idle-enemy { position: absolute; right: 10%; top: 48px; width: 88px; height: 100px; }
+.pixel .idle-enemy > .pixel-sprite { width: 88px; height: 88px; }
+.pixel .pixel-hp { height: 5px; border: 1px solid #1b2338; background: #3c3345; width: 48px; position: absolute; top: 4px; left: 20px; box-shadow: 1px 1px #f5e7b833; }
+.pixel .pixel-hp i { display: block; height: 100%; background: #c77d72; transition: width .15s steps(4); }
+.pixel .actor-label { display: block; position: absolute; bottom: 2px; left: -6px; right: -6px; text-align: center; font: 7px 'Courier New', monospace; color: #f8e4b4; text-shadow: 2px 2px #17243d; }
+.pixel .idle-projectile { position: absolute; left: 33%; top: 84px; opacity: 0; width: 7px; height: 7px; background: #ffe29a; box-shadow: -4px 0 #e3a15c, -7px 2px #9b5e44; }
+.pixel .idle-projectile.shoot { animation: pixel-shot .45s steps(10) forwards; }
+@keyframes pixel-shot { 0% { opacity: 1; left: 33%; } 95% { opacity: 1; left: 66%; } 100% { opacity: 0; left: 66%; } }
+.pixel .idle-damage { position: absolute; left: 64%; top: 32px; color: #ffe196; font: 700 12px 'Courier New', monospace; text-shadow: 2px 2px #19233d; }
+.pixel .idle-scene-footer { position: absolute; bottom: 0; left: 3px; right: 3px; display: flex; justify-content: space-between; color: #e2e6d6; font: 7px 'Courier New', monospace; text-shadow: 1px 1px #132439; }
+.pixel .world-sheet { left: 15px; right: 15px; bottom: 91px; padding: 16px; background: #222d43f5; border: 2px solid #c3a46d; box-shadow: inset 3px 3px #65708066, inset -3px -3px #111a30, 4px 4px #091428; }
+.pixel .world-sheet::before { content: ''; position: absolute; inset: 5px; pointer-events: none; border: 1px solid #8d8a7755; }
+.pixel .world-sheet .section-title { margin-top: 7px; font-size: 17px; letter-spacing: -.8px; }
+.pixel .world-sheet .stats-two { margin: 12px 0; }
+.pixel .world-sheet .stats-two > div { background: none; border: 0; }
+.pixel .world-sheet .stats-two > div + div { border-left: 1px solid #657186; }
+.pixel .world-loadout { margin-bottom: 12px; }
+.pixel .world-loadout .spell-icon { width: 38px; height: 38px; }
+.pixel .pixel-next-hint { margin-top: 10px; font-size: 9px; }
+.pixel .mini-journey { color: #9daabe; margin-top: 12px; }
+.pixel .mini-journey i { height: 2px; background: #59647a; }
+/* Buildings and characters use the same atlas and scale everywhere. */
+.pixel .pixel-section-intro { font: 11px 'Courier New', monospace; color: #e4d2ad; margin: 0 0 15px; }
+.pixel .pixel-building-row { display: flex; gap: 8px; align-items: center; margin: -7px -5px 8px; }
+.pixel .pixel-building-row > .venture-building { width: 112px; height: 112px; }
+.pixel .pixel-building-row .section-title { margin: 5px 0 7px; font-size: 15px; }
+.pixel .pixel-building-row .overline { font-size: 7px; }
+.pixel .pixel-building-row .tiny { margin: 4px 0; }
+.pixel .pixel-workers { display: flex; align-items: center; gap: 8px; border-top: 1px solid #59667e; border-bottom: 1px solid #59667e; padding: 4px 0; font-size: 10px; color: #d3d6c9; }
+.pixel .pixel-workers > .pixel-sprite { width: 40px; height: 40px; }
+.pixel .pixel-workers small { font-size: 8px; color: #adb8c6; }
+.pixel .pixel-worker-total { margin-left: auto; text-align: right; font: 700 16px 'Courier New', monospace; color: #c4dc9e; }
+.pixel .pixel-worker-total small { display: block; font: 8px 'Segoe UI', sans-serif; margin-top: 4px; }
+.pixel .pixel-formula { color: #c9d8ac; margin: 10px 0 13px; font-size: 9px; }
+.pixel .pixel-workshop-row { display: flex; align-items: center; gap: 8px; text-align: left; }
+.pixel .pixel-workshop-row > .pixel-sprite { height: 104px; width: 104px; }
+.pixel .pixel-workshop-row .section-title { font-size: 15px; margin: 5px 0; }
+.pixel .pixel-workshop-mini { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; color: #e3c98f; font: 10px 'Courier New', monospace; }
+.pixel .pixel-workshop-mini > .pixel-sprite { height: 66px; width: 66px; }
+.pixel .pixel-workshop-mini small { color: #adb8c9; font: 9px 'Segoe UI', sans-serif; }
+.pixel .pixel-boss-banner { display: flex; align-items: center; gap: 8px; margin: -10px 0 12px; border-bottom: 2px solid #5c6780; background: #283249; }
+.pixel .pixel-boss-banner > .pixel-sprite { height: 94px; width: 94px; }
+.pixel .pixel-boss-banner strong { display: block; margin: 8px 0 5px; font: 700 12px 'Courier New', monospace; color: #e8d2a2; }
+.pixel .familiar-sprite { width: 55px; height: 55px; }
+.pixel .pixel-familiars { border-top: 2px solid #65718a; padding-top: 18px; margin-top: 20px; }
+.pixel .pixel-familiar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.pixel .pixel-familiar-grid > div { background: #29334b; border: 1px solid #66758d; text-align: center; padding: 10px 4px; }
+.pixel .pixel-familiar-grid .pixel-sprite { height: 80px; width: 80px; }
+.pixel .pixel-familiar-grid strong { display: block; color: #f0d5a3; font: 700 12px 'Courier New', monospace; }
+.pixel .pixel-familiar-grid span:not(.pixel-sprite) { display: block; color: #adb9c9; font-size: 9px; margin: 7px 0; }
+.pixel .result-sigil { text-shadow: none; line-height: 1; padding: 5px; }
+.pixel .result-sigil .pixel-sprite { height: 112px; width: 112px; }
+.pixel .pixel-account-mark { text-align: center; padding: 0 0 16px; }
+.pixel .pixel-account-mark .pixel-sprite { display: block; margin: auto; width: 88px; height: 88px; }
+.pixel .pixel-companion-card { padding: 15px 18px; }
+.pixel .pixel-companion-art { text-align: center; background: #1d293e; margin: -8px -10px 10px; border-bottom: 2px solid #616b82; }
+.pixel .pixel-companion-art > .pixel-sprite { width: 116px; height: 116px; }
+.pixel .pixel-companion-buff { color: #d9d99c; font: 700 13px 'Courier New',monospace; padding: 8px 0 14px; }
+.pixel .pixel-companion-buff span { color: #aebcca; display: block; margin-top: 5px; font: 9px 'Segoe UI',sans-serif; }
+.pixel .pixel-realm-choice { width: 100%; display: flex; align-items: center; gap: 10px; padding: 4px 8px; color: #efdfbb; background: #323e57; border: 2px solid #778296; text-align: left; min-height: 68px; }
+.pixel .pixel-realm-choice .pixel-sprite { width: 48px; height: 48px; }
+.pixel .pixel-realm-choice strong { display: block; font: 700 12px 'Courier New', monospace; }
+.pixel .pixel-realm-choice small { display: block; font-size: 9px; color: #b7c2d0; margin-top: 5px; }
+.pixel .pixel-realm-choice > span:last-child { margin-left: auto; }
+/* Boss encounters keep the same pixel materials and character kit. */
+.pixel .fight { inset: 120px 0 15px; }
+.pixel .fight .pixel-world { opacity: .8; }
+.pixel .combat-hud { background: #18233ad9; padding: 10px; left: 14px; right: 14px; border: 2px solid #7d8999; }
+.pixel .timer { font: 700 25px 'Courier New', monospace; color: #f4d18d; }
+.pixel .health-track { border: 1px solid #b6b6a3; background: #18213b; height: 8px; }
+.pixel .health-track i { background: #b66d70; }
+.pixel .health-track.player i { background: #a7bd7a; }
+.pixel .combat-arena { top: 115px; }
+.pixel .boss-creature { font-size: 0; top: -10px; left: calc(50% - 74px); width: 148px; height: 148px; filter: none; text-shadow: none; }
+.pixel .boss-creature > .pixel-sprite { width: 148px; height: 148px; }
+.pixel .combat-mage { width: 82px; height: 82px; filter: none; }
+.pixel .combat-mage > .pixel-sprite { width: 82px; height: 82px; }
+.pixel .danger-ring { border: 3px dashed #c4826a; background: #bd675733; animation-timing-function: steps(3); width: 84px; height: 84px; }
+.pixel .joystick { border: 2px solid #bdc5bd88; background: #3c536b77; width: 62px; height: 62px; }
+.pixel .joystick::after { border: 2px solid #d2dbcd99; background: #8298a788; width: 25px; height: 25px; }
+.pixel .combat-bottom { background: #1e2b41f2; border: 2px solid #768399; padding: 10px; left: 14px; right: 14px; }
+.pixel .cooldown-overlay { background: #192641dd; color: #f9e8ba; font-family: 'Courier New', monospace; }
+.pixel .pixel-impact { filter: brightness(1.6); transform: translateX(3px); }
+@media (max-height: 800px) and (min-width: 801px) { .pixel .idle-stage { top: 171px; height: 160px; } .pixel .idle-mage { top: 27px; } .pixel .idle-enemy { top: 35px; } .pixel .idle-damage { top: 20px; } }
+@media (max-width: 800px) { .prototype-switcher:has(.art-toggle:not([hidden])) #variant-label { min-width: 125px; } .pixel .idle-stage { top: 180px; height: 175px; } .pixel .idle-scene-footer { font-size: 7px; } }
+@media (max-width: 360px) { .pixel .idle-stage { top: 170px; height: 112px; } .pixel .idle-mage { width: 74px; height: 80px; top: 16px; } .pixel .idle-mage > .pixel-sprite { width: 72px; height: 72px; } .pixel .idle-enemy { width: 72px; height: 78px; top: 16px; } .pixel .idle-enemy > .pixel-sprite { width: 72px; height: 72px; } .pixel .idle-scene-footer { display: none; } .pixel .actor-label { bottom: -3px; } .pixel .idle-damage { top: 8px; } .pixel .idle-projectile { top: 55px; } .pixel .world-sheet { padding: 13px; } .pixel .world-sheet .section-title { font-size: 15px; } .pixel .pixel-building-row > .venture-building { width: 90px; height: 90px; } .pixel .pixel-building-row .section-title { font-size: 13px; } .pixel .pixel-building-row .measure { font-size: 21px; } }
+@media (prefers-reduced-motion: reduce) { .pixel .idle-projectile.shoot { animation: none; opacity: 0; } }

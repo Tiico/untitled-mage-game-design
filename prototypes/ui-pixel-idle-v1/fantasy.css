@@ -1,0 +1,66 @@
+/* THROWAWAY art-direction layer for A. ?art=original restores the first study. */
+.art-direction { font-size: 11px; color: #c5b391; line-height: 1.7; margin-top: 14px; }
+.art-direction:empty { display: none; }
+.prototype-switcher .art-toggle { font: 10px 'Segoe UI', sans-serif; min-width: 66px; border: 1px solid #a79a7e; border-radius: 20px; padding: 0 9px; }
+.art-toggle[hidden] { display: none; }
+#phone.variant-a.fantasy { --ink: #f1e5c9; --muted: #c3bda7; --panel: #172a2a; --line: #86764e; --accent: #d9bd80; --on-accent: #30271c; background-color: #14232a; background-image: radial-gradient(ellipse at 50% 9%, #497a7b33, transparent 53%), repeating-linear-gradient(20deg, #d6c29804 0 1px, transparent 1px 5px); }
+.fantasy .painted-world { position: absolute; inset: 0; overflow: hidden; }
+.fantasy .painted-world > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.fantasy .painted-world::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #071822b8 0, #07182240 19%, transparent 34%, #0a1c2e08 45%, #061c2977 75%, #061923a6 100%); }
+.fantasy .painted-mage { position: absolute; z-index: 1; top: 32%; left: 45%; width: 11%; height: 7.5%; filter: drop-shadow(0 5px 5px #081627) drop-shadow(0 0 12px #e1c39055); }
+.fantasy .painted-mage::after { content: ''; position: absolute; width: 65px; height: 22px; border: 1px solid #bfe6dd77; border-radius: 50%; left: -12px; bottom: -4px; box-shadow: 0 0 16px #a9f0e866, inset 0 0 8px #b4ede433; }
+.fantasy .statusbar { color: #e8ddc1; text-shadow: 0 2px 4px #041820; }
+.fantasy .phone-header { text-shadow: 0 2px 10px #030f16; }
+.fantasy .phone-header h2 { color: #f3e8cc; font-variant: small-caps; font-size: 29px; letter-spacing: .1px; }
+.fantasy .overline { color: #c6b282; letter-spacing: 1.7px; }
+.fantasy .round-button { color: #ead5a3; border-color: #b5a37288; background: radial-gradient(circle at 30% 15%, #6d73544d, #0d252de0 80%); box-shadow: inset 0 0 0 3px #172629, 0 3px 9px #0005; }
+.fantasy .round-button::after { content: ''; position: absolute; width: 5px; height: 5px; border: 1px solid #c5ab74; transform: rotate(45deg); margin: 31px 0 0 -11px; background: #75a2a0; }
+.fantasy .world-tools .badge { color: #e1d4b2; background: linear-gradient(160deg, #173340e8, #10272ce8); border-color: #b7a16b88; box-shadow: inset 0 0 0 2px #0c2128aa, 0 3px 10px #03131a55; }
+.fantasy .world-region { color: #f1dfb1; top: 197px; text-shadow: 0 2px 6px #061821, 0 0 15px #061821; font-family: Georgia, serif; letter-spacing: 2.8px; }
+.fantasy .world-region::before, .fantasy .world-region::after { content: '◇'; font-size: 9px; margin: 0 8px; color: #cfb47d; }
+.fantasy .world-region span { color: #dfdfcb; font-family: 'Segoe UI', sans-serif; letter-spacing: .4px; }
+.fantasy .world-sheet { border: 1px solid #b6a16c; border-radius: 4px 20px 4px 20px; background: radial-gradient(ellipse at 18% 0, #50625a38, transparent 60%), repeating-linear-gradient(110deg, #c6b28604 0 1px, transparent 1px 4px), linear-gradient(140deg, #203b3cf7, #10252bf9 80%); box-shadow: 0 0 0 3px #132b31, 0 0 0 4px #9d8c5d80, inset 0 0 35px #05191e66, 0 14px 30px #03101999; }
+.fantasy .world-sheet::before { content: ''; pointer-events: none; position: absolute; inset: 6px; border: 1px solid #9d92674d; border-radius: 2px 14px 2px 14px; }
+.fantasy .world-sheet::after { content: '✧'; pointer-events: none; position: absolute; left: calc(50% - 12px); top: -13px; width: 24px; height: 24px; text-align: center; line-height: 24px; border: 1px solid #b7a06c; background: #203a38; color: #ead4a0; transform: rotate(45deg); font-size: 18px; box-shadow: 0 0 15px #a5c3ab33; }
+.fantasy .world-sheet .section-title { font-size: 21px; color: #f1e4c3; }
+.fantasy .world-sheet .badge.gold { border-radius: 3px 8px 3px 8px; color: #e7cb91; background: #94805218; }
+.fantasy .measure { font-family: Georgia, serif; color: #f0dfb5; }
+.fantasy .measure small { font-family: 'Segoe UI', sans-serif; color: #b8bda9; font-size: 10px; }
+.fantasy .primary { position: relative; color: #2c2417; font-family: Georgia, serif; font-size: 15px; font-weight: 600; letter-spacing: .3px; min-height: 48px; border: 1px solid #f2dba7; border-radius: 3px 10px 3px 10px; background: linear-gradient(100deg, #ba9557 0, #e3cc96 18%, #f0dda9 48%, #ceae70 85%, #b28f52 100%); box-shadow: inset 0 0 0 3px #b595634d, inset 0 2px 0 #fff3ce80, 0 3px 10px #0005; text-shadow: 0 1px #f9e8bc; }
+.fantasy .primary::before, .fantasy .primary::after { content: ''; position: absolute; top: calc(50% - 3px); width: 5px; height: 5px; border: 1px solid #897345; background: #be9c5d; transform: rotate(45deg); }
+.fantasy .primary::before { left: 12px; }
+.fantasy .primary::after { right: 12px; }
+.fantasy .primary:hover { filter: brightness(1.08); }
+.fantasy .secondary, .fantasy .small-button { border-color: #9f8c5a; color: #e6d8b6; background: linear-gradient(160deg, #6c79501f, #0e282b55); border-radius: 3px 9px 3px 9px; box-shadow: inset 0 0 0 2px #12282b; }
+.fantasy .panel { border-radius: 3px 15px 3px 15px; border-color: #9d885a99; background: radial-gradient(ellipse at 0 0, #63715b25, transparent 65%), linear-gradient(145deg, #253b37, #132a2c); box-shadow: inset 0 0 0 3px #0f272a55, inset 0 0 25px #061d2133; }
+.fantasy .section-title { color: #e5d5b0; }
+.fantasy .segmented { border-radius: 3px 12px 3px 12px; background: #0d2125; padding: 4px; border-color: #84724d; }
+.fantasy .segmented button { font-family: Georgia, serif; font-size: 13px; }
+.fantasy .segmented button.active { border-radius: 2px 8px 2px 8px; background: linear-gradient(160deg, #73755066, #3e5b4b55); color: #f1dfb5; box-shadow: inset 0 0 0 1px #ad986455; }
+.fantasy .spell-icon { border-radius: 4px 10px 4px 10px; border: 1px solid #c49a57; color: #fbd69d; background: radial-gradient(circle at 35% 33%, #f7c26c55, transparent 55%), linear-gradient(145deg, #854b2e, #301c22); box-shadow: inset 0 0 0 2px #391e1888, inset 0 0 12px #e1a45133, 0 2px 6px #0005; }
+.fantasy .spell-icon svg { width: 78%; height: 78%; overflow: visible; filter: drop-shadow(0 0 4px #f5ad6377); }
+.fantasy .spell-icon.ice { border-color: #98c7c8; background: radial-gradient(circle at 35% 33%, #a5efff55, transparent 60%), linear-gradient(145deg, #285969, #102333); box-shadow: inset 0 0 0 2px #15333a, inset 0 0 12px #6ae1f033, 0 2px 6px #0005; }
+.fantasy .spell-icon.ice svg { filter: drop-shadow(0 0 4px #8de4e6bb); }
+.fantasy .spell-icon.frost { border-color: #e1b693; background: radial-gradient(ellipse at 0 0, #91ecf066, transparent 70%), linear-gradient(130deg, #224c68 10%, #3b3249 50%, #7a3f26); }
+.fantasy .spell-icon.empty, .fantasy .spell-icon.unknown { color: #c2b88e; background: radial-gradient(circle, #c2b07a12, #0c232b66); box-shadow: inset 0 0 0 2px #b39b5e13; border: 1px solid #aa986651; }
+.fantasy .recipe-orbit::before { width: 152px; height: 152px; border: 3px double #ac956780; box-shadow: 0 0 0 7px #bda7750a, 0 0 0 8px #aa956333, 0 0 30px #80bfa51a; }
+.fantasy .note { border-left-color: #d2b47a; background: #a18e4f10; color: #cfc5a9; }
+.fantasy .bottom-nav { background: repeating-linear-gradient(100deg, #ac996007 0 1px, transparent 1px 5px), linear-gradient(180deg, #152c2ff7, #081e25fa); border-top: 1px solid #b59d67aa; box-shadow: 0 -3px 0 #0d262b, 0 -4px 0 #b49d6333; }
+.fantasy .bottom-nav button { color: #aeb8a9; }
+.fantasy .bottom-nav button.active { color: #f0d598; }
+.fantasy .nav-icon { border: 1px solid #bda66b33; width: 30px; height: 28px; border-radius: 50% 50% 3px 3px; padding: 2px; background: #132b2c; font-size: 19px; line-height: 22px; box-shadow: inset 0 0 7px #b6a56c0d; }
+.fantasy .bottom-nav button.active .nav-icon { border-color: #cbb478; background: radial-gradient(ellipse at 50% 100%, #c1ab6066, #244236); box-shadow: 0 0 12px #d1b66f33; }
+.fantasy .mini-journey { color: #bcb69b; }
+.fantasy .mini-journey i { background: linear-gradient(90deg, #a48d5b44, #c2ac7166, #a48d5b44); }
+.fantasy .good { color: #b7d5ad; }
+.fantasy .toast { background: linear-gradient(140deg, #d6c397, #f1e2bd); border: 1px solid #f1d99f; border-radius: 3px 13px 3px 13px; color: #2f3c2a; }
+.fantasy .menu-sheet { background: linear-gradient(145deg, #294039, #112a2d); border-radius: 8px 25px 0 0; border-color: #b79b64; }
+.fantasy .stats-two > div { border-radius: 3px 10px 3px 10px; border-color: #9f8b585e; }
+.fantasy .timer { color: #f2d499; }
+.fantasy .health-track { border-color: #c0a57399; border-radius: 2px; }
+.fantasy .health-track i { background: linear-gradient(180deg, #d69e7f, #873c48); }
+.fantasy .health-track.player i { background: linear-gradient(180deg, #b3ce8f, #57806b); }
+.fantasy .full-block { background: #102b2bea; }
+@media (max-height: 800px) and (min-width: 801px) { .fantasy .world-region { top: 175px; } }
+@media (max-width: 800px) { .fantasy .world-region { top: 201px; } .prototype-switcher:has(.art-toggle:not([hidden])) { gap: 5px; } .prototype-switcher:has(.art-toggle:not([hidden])) .variant-dots { display: none; } .prototype-switcher:has(.art-toggle:not([hidden])) #variant-label { min-width: 126px; font-size: 11px; } .prototype-switcher:has(.art-toggle:not([hidden])) { padding: 5px 8px; } }
+@media (max-width: 360px) { .fantasy .phone-header h2 { font-size: 25px; } .fantasy .world-sheet .section-title { font-size: 19px; } .fantasy .world-region { top: 185px; } }
