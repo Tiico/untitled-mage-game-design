@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- REVIEW PROTOTYPE v4: Production-quality presentation, corrected raster alignment and loadout-driven idle spells.
+     Question: do the visual finish, revisiting realms and idle spell cycle communicate the intended game? -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Pixel idle / 04</title>
+    <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 04</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>Din magi.<br>Ett eget sigill.</h1>
+            <p class="intro">Samma crest. Tydligare val. Spells som syns i varje kast.</p>
+            <div class="design-note"><span class="eyebrow">VALD RIKTNING / B</span><h2>Ett crest som kan följa resan</h2><p>Centrerade bildytor och konsekventa ramar. Idle-striden växlar mellan ditt bygges spells. Besegrade realms finns kvar att farma i.</p></div>
+            <p class="eyebrow">PROVA ETT ÖGONBLICK</p>
+            <div class="scenario-buttons">
+                <button data-scenario="start">01 / Fire realm · 1-1</button>
+                <button data-scenario="gate">02 / Vid bossgrinden · 1-5</button>
+                <button data-scenario="ice">03 / Ice realm · Icebolt</button>
+                <button data-scenario="spells">04 / Tre spells i idle-bygget</button>
+                <button data-scenario="revisit">05 / Återbesök i Fire realm</button>
+                <button data-scenario="collection">06 / 240 familiars</button>
+                <button data-scenario="return">07 / Borta i 20 timmar</button>
+            </div>
+            <p class="fine">Klickbar skiss · <a href="https://github.com/Tiico/untitled-mage-game/issues/4" target="_blank" rel="noopener">Uppgift #4</a><br>Illustrativa värden. Inga sparade ändringar.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>0.7.0 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">ATT TA STÄLLNING TILL</p><h2>Håller helheten ihop?</h2>
+            <ol class="review-points"><li><strong>Visuell precision</strong><p>Ikoner centreras efter sina synliga pixlar. Spellplatser och kontroller följer samma mått och mellanrum.</p></li><li><strong>Varje spell känns igen</strong><p>Firebolt, Icebolt och Frostfire har egen projektil, färg och träff. Kastet markeras i idle-bygget.</p></li><li><strong>Resan finns kvar</strong><p>Byt till en besegrad realm för shards och fortsätt sedan där du var, utan att göra om bossen.</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine"><b>Demonstrationsformel:</b> Mage Power = permanent HP + Spell power.<br>Namnet är accepterat. Viktning och balans återstår.<br>Framtida crestutseenden innebär inget beslut om ascension.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../ui-pixel-idle-v3/?variant=B">0.6.0 · Mage Power & crest ↗</a><a target="_top" href="../ui-pixel-idle-v2/?variant=B">0.5.0 · Pixel idle v2 / B ↗</a><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Framtida crestutseenden"><span>CREST-STUDIE</span><button id="previous" aria-label="Föregående crestutseende">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa crestutseende">→</button></nav>
+    <script src="presentation.js"></script>
+    <script src="prototype.js"></script>
+</body>
+</html>
