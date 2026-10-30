@@ -1,9 +1,9 @@
 // The simulator catalog. Proposed content is never an implicit PRD decision.
 export const metadata = {
-    version: '2026.10.30.2',
-    prdVersion: '1.2',
+    version: '2026.10.30.7',
+    prdVersion: '1.7',
     lastReviewed: '2026-10-30',
-    sourcePrdSha256: '80f9e3888361feb4021eae5d950bca564d4e49148bfab9eff868f2e119e2e103'
+    sourcePrdSha256: '47f76c15412c97d4e8739ef04cfe8232d8bc9ca307166a73dcaa98c795c21e0d'
 };
 export const realms = ['Fire', 'Ice', 'Earth', 'Wind'];
 export const rules = {
@@ -26,3 +26,19 @@ export const spells = [
     {id:'bastion',name:'Glacial Bastion',symbol:'⬡',color:'#bdcfcf',level:2,inputs:['ward','stone'],role:'Proposal: a stronger defensive self-buff.',x:470,y:570},
     {id:'tempest',name:'Tempest Crown',symbol:'♜',color:'#d4ddae',level:3,inputs:['frostfire','hail'],role:'Proposal: the multi-step offensive payoff. Uses two already-fused spells.',x:805,y:330}
 ];
+
+// Explicit PO exploration template; outside the unchanged shared six-base/six-fusion target.
+export const coneProposal = [
+    {id:'flame-cone',name:'Flame Cone',symbol:'◭',color:'#f5ac79',realm:0,level:1,cost:10,role:'Proposal: a cone-shaped flame spell; a shape ingredient for crowd clearing.'},
+    {id:'frostfire-cone',name:'Frostfire Cone',symbol:'◭',color:'#cdb4f2',level:3,inputs:['frostfire','flame-cone'],role:'PO example: Frostfire Bolt gains a wide cone from Flame Cone. Useful against swarms and boss reinforcements. Geometry, recipe and values remain proposals.'}
+];
+export function withConeProposal(catalog) {
+    const next=structuredClone(catalog);
+    for(const candidate of coneProposal){
+        const existing=next.find(item=>item.id===candidate.id);
+        if(existing){
+            if(['name','role','level','realm','cost','inputs'].some(key=>JSON.stringify(existing[key])!==JSON.stringify(candidate[key])))throw new Error(`Local draft conflict: ${candidate.id}. Existing drafts were kept; the proposal was not added.`);
+        }else next.push(structuredClone(candidate));
+    }
+    return next;
+}

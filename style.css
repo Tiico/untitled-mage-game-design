@@ -949,3 +949,7 @@ form>label {
         scroll-behavior:auto!important;
     }
 }
+
+.cone-pixel-icon{position:relative;display:block;width:100%;height:100%}
+.cone-pixel-icon>span{position:absolute;inset:8%;transform:rotate(var(--ray));transform-origin:50% 85%}
+.cone-pixel-icon .pixel-sprite{width:100%;height:100%}
