@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- REVIEW PROTOTYPE v5: Visual realm trail and three playable active-farming proposals.
+     Question: which optional activity best showcases spells while idle farming continues? -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Pixel idle / 05</title>
+    <link rel="stylesheet" href="prototype.css">
+    <link rel="stylesheet" href="active-play.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 05</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>Din magi.<br>Ditt nästa kast.</h1>
+            <p class="intro">Låt idle arbeta. Spela själv när du vill. Prova tre sätt att få lite mer magi.</p>
+            <div class="design-note"><span class="eyebrow">GEMENSAM GRUND / B</span><h2>En resa som går att se</h2><p>Sammanlänkade noder visar farmingstegen. En egen bossmarkör visar nästa stora prövning. Crest och permanent resursrad behålls.</p></div>
+            <p class="eyebrow">PROVA ETT ÖGONBLICK</p>
+            <div class="scenario-buttons">
+                <button data-scenario="start">01 / Fire realm · 1-1</button>
+                <button data-scenario="gate">02 / Vid bossgrinden · 1-5</button>
+                <button data-scenario="ice">03 / Ice realm · Icebolt</button>
+                <button data-scenario="active">04 / Aktivt spel · tre spells</button>
+                <button data-scenario="spells">05 / Tre spells i idle-bygget</button>
+                <button data-scenario="revisit">06 / Återbesök i Fire realm</button>
+                <button data-scenario="collection">07 / 240 familiars</button>
+                <button data-scenario="return">08 / Borta i 20 timmar</button>
+            </div>
+            <p class="fine">Klickbar skiss · <a href="https://github.com/Tiico/untitled-mage-game/issues/4" target="_blank" rel="noopener">Uppgift #4</a><br>Illustrativa värden. Inga sparade ändringar.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>0.8.0 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">ATT TA STÄLLNING TILL</p><h2>Vilket kast vill du göra igen?</h2>
+            <ol class="review-points"><li><strong>A · Rune Hunt / förslag</strong><p>Välj spell och sikta på laddad slime. Håll för lugnare kast. Målet flyttar sig.</p></li><li><strong>B · Arcane Pulse</strong><p>Ett kast per puls. Tajma guldfönstret och se spellens träff.</p></li><li><strong>C · Spell Weave</strong><p>Följ en kort spellkedja. En upplåst fusion blir kedjans final.</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine"><b>Demonstrationsformel:</b> Mage Power = permanent HP + Spell power.<br>Namnet är accepterat. Viktning och balans återstår.<br>Aktiviteternas 20 sekunder och bonusvärden är testvärden. Val av minispel och balans återstår att besluta.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../ui-pixel-idle-v4/?variant=B">0.7.0 · Visuell finish & spellcykel ↗</a><a target="_top" href="../ui-pixel-idle-v3/?variant=B">0.6.0 · Mage Power & crest ↗</a><a target="_top" href="../ui-pixel-idle-v2/?variant=B">0.5.0 · Pixel idle v2 / B ↗</a><a target="_top" href="../spell-workspace-v1/?spell=frostfire&stage=4&view=map">0.4.0 · Spellforge designverktyg ↗</a><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">0.3.0 · Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">0.2.0 · Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">0.1.0 · Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Jämför aktiva spelidéer"><span>SPELIDÉ</span><button id="previous" aria-label="Föregående spelidé">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa spelidé">→</button></nav>
+    <script src="presentation.js"></script>
+    <script src="activity-model.js"></script>
+    <script src="active-play.js"></script>
+    <script src="prototype.js"></script>
+</body>
+</html>

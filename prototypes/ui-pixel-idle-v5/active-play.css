@@ -1,0 +1,122 @@
+/* A realm path, not a strip of numbered buttons. */
+.realm-trail{display:flex;align-items:center;height:43px;margin:6px 0 0;padding:0 3px;gap:0}
+.trail-stop{display:grid;place-items:center;width:24px;height:28px;flex:0 0 24px}
+.trail-stop>i{display:block;width:10px;height:10px;transform:rotate(45deg);border:1px solid #8a91a2;background:#1c2940;box-shadow:inset 1px 1px #11192c}
+.trail-stop.complete>i{background:#d1b56f;border-color:#f0d697;box-shadow:0 0 5px #d0ab4733}
+.trail-stop.current>i{width:16px;height:16px;border:2px solid #f8d994;background:#a38348;box-shadow:0 0 0 3px #e3bd5a19,0 0 12px #f4d78b55}
+.trail-pipe{height:2px;background:#5a657b;flex:1;box-shadow:0 1px #0f1a2c}
+.trail-pipe.complete{background:#c4a86c}
+.trail-boss{display:grid;place-items:center;width:41px;height:41px;border:1px solid #67738a;background:#19283f;flex-shrink:0;margin-left:4px;box-shadow:inset 1px 1px #46536a}
+.trail-boss .sprite{width:34px;height:34px;filter:saturate(.5);opacity:.7}
+.trail-boss.ready{border-color:#e7bc75;box-shadow:inset 0 0 0 2px #ab915a66,0 0 10px #d9af4833}
+.trail-boss.ready .sprite,.trail-boss.complete .sprite{filter:none;opacity:1}
+.trail-boss.complete{border-color:#9fae85;background:#2b433a}
+.trail-caption{display:flex;justify-content:space-between;color:#aebbd0;font-size:9px;margin:3px 0 10px}
+.realm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.realm-actions .rune-button{font-size:10px;padding:11px 16px;min-height:46px}
+.map-stage-dot{display:block;width:11px;height:11px;background:#6f7c94;border:1px solid #b2bed0;transform:rotate(45deg);box-shadow:inset 1px 1px #233048}
+.level-choice.current .map-stage-dot{background:#eed08a;border-color:#ffe9b9;box-shadow:0 0 9px #e1b85744}
+
+/* Active spell-play: the same world, three different skills to evaluate. */
+.activity-page{display:flex;flex-direction:column;gap:8px;height:100%;min-height:510px;padding:12px 14px 14px;background:#192238}
+.activity-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+.activity-heading h2{font:700 20px/1.2 'Courier New',monospace;color:#f2dcae;margin:3px 0 0}
+.activity-heading .kicker{font-size:8px;letter-spacing:.9px}
+.activity-heading .text-button{font-size:10px;min-height:42px;padding:4px 7px}
+.activity-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border:1px solid #74809a;padding:3px;background:#121e32;flex-shrink:0}
+.activity-tabs button{min-height:36px;background:none;border:0;color:#b9c5d8;font:10px 'Courier New',monospace;padding:7px 4px}
+.activity-tabs button.active{color:#f0d69e;background:#3c465c;box-shadow:inset 0 -2px #d9b97d}
+.practice-tallies{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#b8c6d7;min-height:23px;flex-shrink:0}
+.practice-tallies>span{display:flex;align-items:center;gap:3px;white-space:nowrap}
+.practice-tallies b{color:#eed5a3;font:700 12px 'Courier New',monospace}
+.practice-tallies .inline-icon{width:18px;height:18px;margin:0}
+.idle-tally{color:#a9c99f}
+.practice-field{position:relative;isolation:isolate;min-height:160px;flex:1;overflow:hidden;border:2px solid #8b826e;background:#1d3340;box-shadow:inset 2px 2px #5c6b7b}
+.practice-field .scenery{background-position:var(--realm-x) 50%;background-size:300% 100%;opacity:.85}
+.practice-field .scenery.ice{background-size:cover;background-position:center}
+.practice-field-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(#142138bb,transparent 40%,#14213877)}
+.practice-help{position:absolute;left:8px;right:8px;top:8px;color:#f1dec0;font:10px 'Courier New',monospace;line-height:1.4;text-align:center;text-shadow:1px 2px #102037}
+.hunt-targets{position:absolute;left:5%;right:5%;top:37px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.practice-target{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:96px;background:none;border:1px solid transparent;padding:4px 3px;color:#e6dbc5;touch-action:none;-webkit-user-select:none;user-select:none}
+.practice-target>.sprite{width:64px;height:64px;z-index:1}
+.target-aura{position:absolute;top:11px;width:65px;height:65px;border:1px solid transparent;transform:rotate(45deg);background:#1b2f3e33;transition:background .2s,border-color .2s}
+.practice-target.charged .target-aura{border-color:#f0d087;background:#f1ce6330;box-shadow:0 0 14px #f7d27350,inset 0 0 12px #f0d16722}
+.practice-target.charged small{color:#ffe4a4}
+.practice-target small{font:7px 'Courier New',monospace;color:#c1ccda;margin-top:4px;text-shadow:1px 1px #162239;letter-spacing:.5px;z-index:2}
+.practice-enemy-hp{display:block;width:43px;height:4px;background:#352b3a;border:1px solid #b7a497;z-index:2}
+.practice-enemy-hp i{display:block;height:100%;background:#c87b78;transition:width .15s}
+.practice-mage{position:absolute;left:12px;bottom:9px;width:62px;height:62px;pointer-events:none;z-index:2}
+.practice-mage>.sprite{width:62px;height:62px}
+.practice-mage.casting>.sprite{animation:practice-cast .5s ease-out}
+.practice-mage-glow{position:absolute;right:0;top:10px;width:20px;height:20px;background:radial-gradient(circle,#ffdc8a,transparent 70%);opacity:0}
+.practice-mage.casting .practice-mage-glow{animation:practice-glow .4s ease-out}
+.practice-projectile{position:absolute;width:33px;height:33px;margin:-16px;opacity:0;pointer-events:none;z-index:4;color:#ffc676}
+.practice-projectile>.sprite{width:33px;height:33px}
+.practice-projectile.moving{animation:practice-flight .24s linear both;filter:drop-shadow(0 0 5px currentColor)}
+.practice-field[data-active-spell=ice] .practice-projectile{color:#9ce2ff}
+.practice-field[data-active-spell=frost] .practice-projectile{color:#d3a4ff}
+.practice-impact{position:absolute;width:43px;height:43px;margin:-21px;opacity:0;pointer-events:none;z-index:3;background:radial-gradient(circle,#fff4ceaa,#efbb6a55 35%,transparent 68%)}
+.practice-impact.burst{animation:practice-burst .35s ease-out both}
+.practice-hit>.sprite{animation:practice-hit .3s ease-out}
+.practice-feedback{position:absolute;bottom:14px;left:65px;right:9px;font:700 11px 'Courier New',monospace;line-height:1.4;color:#d8e0da;text-align:center;text-shadow:1px 2px #14233a;min-height:15px;z-index:5;pointer-events:none}
+.practice-feedback.good{color:#ffe0a0}
+.practice-status{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#acbed3;min-height:18px;flex-shrink:0;gap:8px}
+.practice-status>span:first-child{color:#eed7a8}
+.active-spells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;flex-shrink:0}
+.practice-spell{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid #66768f;background:linear-gradient(#303c53,#233048);color:#e7d9bd;min-width:0;min-height:68px;padding:5px 3px;gap:2px}
+.practice-spell>.sprite{width:32px;height:30px}
+.practice-spell>span:not(.sprite){font:700 9px/1.2 'Courier New',monospace;text-align:center;max-width:100%;min-height:11px}
+.practice-spell small{font:8px system-ui,sans-serif;color:#b4c1d4}
+.practice-spell.selected{border-color:#e7c27c;background:linear-gradient(#514838,#31394b);box-shadow:inset 0 0 0 1px #a28c5a}
+.practice-footer{flex-shrink:0}
+.practice-footer .rune-button{min-height:44px;padding-block:10px}
+.practice-caption{font-size:10px;line-height:1.5;color:#aebed0;margin:0;text-align:center;flex-shrink:0}
+.practice-focus{position:absolute;top:32px;left:calc(50% - 52px);width:104px;height:111px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#efd6a6;padding:0}
+.practice-focus>.sprite{width:85px;height:85px;z-index:1}
+.practice-focus small{display:block;font:8px 'Courier New',monospace;letter-spacing:.6px;margin-top:6px;white-space:nowrap;color:#c4cfdf}
+.practice-focus small.ready{color:#ffe3a0}
+.focus-aura{position:absolute;top:6px;width:86px;height:86px;border-radius:50%;background:#c9be7720;border:1px solid #b8b69266;box-shadow:0 0 16px #9bbdb422}
+.mode-pulse .practice-mage{left:8px;bottom:25px;width:53px;height:53px}
+.mode-pulse .practice-mage>.sprite{width:53px;height:53px}
+.mode-pulse .practice-feedback{bottom:9px;left:5px;right:5px;font-size:10px}
+.pulse-lane{position:absolute;bottom:31px;left:13%;right:13%;height:14px;border:1px solid #b1a68b;background:#1b273e;box-shadow:0 0 0 3px #15243a88;overflow:visible}
+.pulse-good{position:absolute;left:27%;width:46%;height:100%;background:#a9b88533}
+.pulse-perfect{position:absolute;left:41%;width:18%;height:100%;background:#dbb66b99;border-inline:1px solid #f4d38a}
+.pulse-marker{position:absolute;left:0;top:-4px;width:9px;height:20px;background:#b6e4ff;border:1px solid #e6fbff;box-shadow:0 0 6px #a3d9ff66;transform:translateX(-50%)}
+.weave-queue{position:absolute;top:30px;left:14px;right:14px;display:flex;align-items:center;justify-content:center;gap:5px;z-index:2}
+.weave-rune{position:relative;display:grid;place-items:center;width:40px;height:40px;border:1px solid #8b8a91;background:#1a273bc9;flex-shrink:0}
+.weave-rune>.sprite{width:30px;height:30px}
+.weave-rune small{position:absolute;top:1px;left:3px;font:7px 'Courier New',monospace;color:#b3bfd0}
+.weave-rune.current{border:2px solid #e6c785;box-shadow:0 0 10px #e1bf6855;background:#5b4c37bb}
+.weave-queue>i{width:22px;height:2px;background:#9d9976}
+.mode-weave .practice-focus{left:auto;right:15px;top:auto;bottom:17px;width:78px;height:85px}
+.mode-weave .practice-focus>.sprite{width:69px;height:69px}
+.mode-weave .practice-focus small{display:none}
+.mode-weave .practice-mage{left:17px;bottom:17px}
+.mode-weave .practice-feedback{left:64px;right:75px;bottom:24px;font-size:10px}
+.practice-result{height:auto;min-height:100%;padding:20px 18px;justify-content:center;gap:15px}
+.practice-reward-art{display:grid;place-items:center;margin:2px auto}
+.practice-reward-art>.ui-icon{width:88px;height:88px}
+.practice-reward{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;color:#ecd09b}
+.practice-reward>.ui-icon{width:35px;height:35px}
+.practice-reward>strong{font:700 35px 'Courier New',monospace}
+.practice-reward>span:last-child{font:12px 'Courier New',monospace}
+.round-report{border:1px solid #718099;background:#243249;padding:10px 15px}
+.round-report>div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;font-size:11px;color:#bdcbdb;border-bottom:1px solid #506079}
+.round-report>div:last-child{border:0}
+.round-report b{color:#efdbad;font:700 13px 'Courier New',monospace}
+@keyframes practice-flight{0%{opacity:1;transform:translate(0,0)}100%{opacity:1;transform:translate(var(--tx),var(--ty))}}
+@keyframes practice-hit{0%,100%{transform:translateX(0)}40%{transform:translateX(4px) scale(.96,1.03)}}
+@keyframes practice-cast{0%,100%{transform:translateX(0)}30%{transform:translateX(2px)}}
+@keyframes practice-glow{0%{opacity:1}100%{opacity:0}}
+@keyframes practice-burst{0%{opacity:1;transform:scale(.5)}100%{opacity:0;transform:scale(1.3)}}
+@media(max-width:360px){.realm-actions{gap:7px}.realm-actions .rune-button{font-size:9px;padding-inline:15px}.activity-page{padding:9px 11px 11px;gap:6px;min-height:490px}.activity-heading h2{font-size:18px}.activity-tabs button{font-size:9px;min-height:34px}.practice-caption{font-size:9px;line-height:1.4}.practice-spell{min-height:64px}.practice-spell>span:not(.sprite){font-size:8px}.practice-target>.sprite{width:56px;height:56px}.practice-target{min-height:88px}.target-aura{width:55px;height:55px}.practice-field{min-height:150px}.practice-target small{font-size:6px}.practice-mage{width:53px;height:53px}.practice-mage>.sprite{width:53px;height:53px}.hunt-targets{left:3%;right:3%;top:32px}.practice-feedback{font-size:9px;bottom:12px;left:50px}.practice-help{font-size:9px}.practice-tallies{font-size:9px}.practice-tallies b{font-size:11px}.practice-tallies .inline-icon{width:16px;height:16px}.mode-pulse .practice-focus{top:27px;left:calc(50% - 44px);width:88px;height:96px}.mode-pulse .practice-focus>.sprite{width:70px;height:70px}.mode-weave .practice-focus{right:9px;bottom:12px;width:65px;height:75px}.mode-weave .practice-focus>.sprite{width:60px;height:60px}.weave-queue{top:29px}.weave-rune{width:35px;height:35px}.weave-rune>.sprite{width:27px;height:27px}.mode-weave .practice-feedback{left:55px;right:65px;font-size:8px}.practice-status{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.practice-projectile,.practice-impact{display:none}.practice-mage.casting>.sprite,.practice-hit>.sprite{transform:none!important}.practice-mage-glow{display:none}.pulse-marker{display:none}.target-aura{transition:none}}
+
+.practice-field.realm-fire .practice-target>.sprite,.practice-field.realm-fire .practice-focus>.sprite{filter:hue-rotate(145deg)}
+.practice-field.realm-earth .practice-target>.sprite,.practice-field.realm-earth .practice-focus>.sprite{filter:hue-rotate(285deg)}
+.practice-field.realm-wind .practice-target>.sprite,.practice-field.realm-wind .practice-focus>.sprite{filter:hue-rotate(40deg)}
+.practice-field[data-active-spell=ice] .practice-impact{background:radial-gradient(circle,#e7fbffdd,#8ed8f877 35%,transparent 68%)}
+.practice-field[data-active-spell=frost] .practice-impact{background:radial-gradient(circle,#fff6d9ee,transparent 35%,#c795ff88 45%,transparent 65%);box-shadow:inset 5px 0 10px #ffac6833,inset -5px 0 10px #9be6ff44;border-radius:50%}
+.practice-field[data-active-spell=ice] .practice-mage-glow{background:radial-gradient(circle,#c1efff,transparent 70%)}
+.practice-field[data-active-spell=frost] .practice-mage-glow{background:radial-gradient(circle,#e7beff,transparent 70%)}
