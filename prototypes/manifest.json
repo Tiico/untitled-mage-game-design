@@ -1,7 +1,45 @@
 [
   {
-    "sourceCommit": "35aabbe65e0d9039a89f085485541177979eb839",
+    "version": "0.13.0",
+    "id": "ui-pixel-idle-v8",
+    "sourceCommit": "a0b481602f6dc166c1447eb2e3cf7d007cec2350",
+    "query": "?variant=B&study=buffSwarm",
+    "files": {
+      "index.html": "445e90505728ad0de46cfdba113a61a5fa68b8ded65620e5ab97a1483e2d95ef",
+      "prototype.css": "756331e14bdad0e630087a9d7da079482f3f285ca4264d39af8feededdd46b2e",
+      "active-play.css": "20b4eee4c42cf706f1559ebe3c677dfd1437b4525fb608974faebbb4552e7921",
+      "presentation.js": "82fb88f890fc393c1d0714c5477e87fbe5e8a6c0c9e1092d69d7246a6313984e",
+      "support-model.js": "bf01cad9fd5167005c37d256afe34e09be79c32230420e3d73c48e342766955c",
+      "activity-model.js": "1bcdedbaf5b945bf91519b4f50057de2c283764bf57f537060db4f1d7f293a24",
+      "active-play.js": "438b7af63d6128f3e072c84ec628a7e555d3824ef2b5fe294a3ee287a330b3f2",
+      "swarm-boss.js": "379abff1740f9a3ccba9c33801967a07382ed16dab32613a524a3fb7c98c16b7",
+      "prototype.js": "c54e07fa10450ae5465c6e357dd48d37176eef29f7b269233cccfb01682bceb7",
+      "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322",
+      "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
+      "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
+      "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
+    }
+  },
+  {
+    "version": "0.12.0",
+    "id": "spell-workspace-v3",
+    "sourceCommit": "a0b481602f6dc166c1447eb2e3cf7d007cec2350",
+    "query": "?proposal=shield-buff&stage=2&view=map",
+    "files": {
+      "index.html": "99fcb4cdc401f97427f6ee016f2bbe4730d18cabe355d5e39102ebc4bfddd812",
+      "style.css": "5dbdcbcf21e2e32f086716fe8865f72ab6f31b27e4f27b0d4cc0e2b2dc77ee7f",
+      "app.mjs": "f8c1d73a9efa660ace125fb8085ecda9bca4f143065638957d2f1c93c649235d",
+      "catalog.mjs": "e4d5433648cce027400b55b7f35aaa8d581fe16e735380f10372557601e23379",
+      "model.mjs": "0284d36d4fac5b9023f8f76aaa8dc44bb3e0d93815a78e501406a4388db9ba4a",
+      "analysis.mjs": "6b207c42f923ff4e2a6663f44f5c07adaacf5d0cc2929a6f9ffe6da8f74971c8",
+      "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322"
+    }
+  },
+  {
     "version": "0.11.0",
+    "id": "ui-pixel-idle-v7",
+    "sourceCommit": "35aabbe65e0d9039a89f085485541177979eb839",
+    "query": "?variant=B&view=active",
     "files": {
       "index.html": "6a769d7a3039527b2e5acacc7c9d916175fd9bdd187f4b7848d820126d4dac63",
       "prototype.css": "756331e14bdad0e630087a9d7da079482f3f285ca4264d39af8feededdd46b2e",
@@ -15,13 +53,13 @@
       "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v7",
-    "query": "?variant=B&view=active"
+    }
   },
   {
-    "sourceCommit": "35aabbe65e0d9039a89f085485541177979eb839",
     "version": "0.10.0",
+    "id": "spell-workspace-v2",
+    "sourceCommit": "35aabbe65e0d9039a89f085485541177979eb839",
+    "query": "?proposal=swarm-cone&stage=3&view=map",
     "files": {
       "index.html": "192907dc32663a9e6b085dce989f193f41fdf35b480727cc9b701274090f668c",
       "style.css": "906ab68598b9b0bce7367195e50f3204e2cc0ae33300a5de0ee47408a9df47cd",
@@ -30,13 +68,13 @@
       "model.mjs": "0284d36d4fac5b9023f8f76aaa8dc44bb3e0d93815a78e501406a4388db9ba4a",
       "analysis.mjs": "6b207c42f923ff4e2a6663f44f5c07adaacf5d0cc2929a6f9ffe6da8f74971c8",
       "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322"
-    },
-    "id": "spell-workspace-v2",
-    "query": "?proposal=swarm-cone&stage=3&view=map"
+    }
   },
   {
-    "sourceCommit": "d2947321493fdf8abc66d87702bdcc0d8c22d7a5",
     "version": "0.9.0",
+    "id": "ui-pixel-idle-v6",
+    "sourceCommit": "d2947321493fdf8abc66d87702bdcc0d8c22d7a5",
+    "query": "?variant=B",
     "files": {
       "index.html": "efd3be7d1f7f5155ba52a337d8e1172b206f07ef6f979acba744b48992b60b7e",
       "prototype.css": "756331e14bdad0e630087a9d7da079482f3f285ca4264d39af8feededdd46b2e",
@@ -49,13 +87,13 @@
       "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v6",
-    "query": "?variant=B"
+    }
   },
   {
-    "sourceCommit": "014efdee442a4b06ffab8ca5000867904fad35a7",
     "version": "0.8.0",
+    "id": "ui-pixel-idle-v5",
+    "sourceCommit": "014efdee442a4b06ffab8ca5000867904fad35a7",
+    "query": "?variant=B",
     "files": {
       "index.html": "f5b83ceff86f6b404e1f9e0fed2d301097f5e649fbbe4cbaccbe754c1df02637",
       "prototype.css": "756331e14bdad0e630087a9d7da079482f3f285ca4264d39af8feededdd46b2e",
@@ -68,13 +106,13 @@
       "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v5",
-    "query": "?variant=B"
+    }
   },
   {
-    "sourceCommit": "8b42c90242748fc19a933857759d6de3dbc7b3ae",
     "version": "0.7.0",
+    "id": "ui-pixel-idle-v4",
+    "sourceCommit": "8b42c90242748fc19a933857759d6de3dbc7b3ae",
+    "query": "?variant=B",
     "files": {
       "index.html": "ee95cacb419591e80d39ab0169d3803699107fcb7c3c619a2dc86cf69574b858",
       "prototype.css": "756331e14bdad0e630087a9d7da079482f3f285ca4264d39af8feededdd46b2e",
@@ -84,13 +122,13 @@
       "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v4",
-    "query": "?variant=B"
+    }
   },
   {
-    "sourceCommit": "1039b300d333c9700ee39a56d8c721143edead50",
     "version": "0.6.0",
+    "id": "ui-pixel-idle-v3",
+    "sourceCommit": "1039b300d333c9700ee39a56d8c721143edead50",
+    "query": "?variant=B",
     "files": {
       "index.html": "110b384c1bc06765fd60062ba7d03eaca9a6cbba0036408f6c8d2e17ebe487c0",
       "prototype.css": "5a8bf7d0833f61e616a8f64607d466997954f1ef153f89cac83b21202c754fa7",
@@ -99,13 +137,13 @@
       "assets/hud-pixel-atlas.png": "49b08d9cc9c63c25930f2d4fc97b47acf1695bb305fa753539c21ffc5cd648f8",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v3",
-    "query": "?variant=B"
+    }
   },
   {
-    "sourceCommit": "df8a0822ce95d398e4c5a58b0c3293849317ce04",
     "version": "0.5.0",
+    "id": "ui-pixel-idle-v2",
+    "sourceCommit": "df8a0822ce95d398e4c5a58b0c3293849317ce04",
+    "query": "?variant=A",
     "files": {
       "index.html": "b330345d4af6602d36a7f29bcf7821db591975e42bd4dabfff6d924b82146c8d",
       "prototype.css": "9a93ed199f733174e64817e854c06420c58e8b5bba058aaaafec48075faa813e",
@@ -113,13 +151,13 @@
       "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v2",
-    "query": "?variant=A"
+    }
   },
   {
-    "sourceCommit": "32c2b2e0507aae7a96834c04d94491fde540c583",
     "version": "0.4.0",
+    "id": "spell-workspace-v1",
+    "sourceCommit": "32c2b2e0507aae7a96834c04d94491fde540c583",
+    "query": "?spell=frostfire&stage=4&view=map",
     "files": {
       "index.html": "46f56486d1ed880ae97a3034668cc01aced17dc47aa9cbc1844a69bbc3e1f0b4",
       "style.css": "5edc6fd32b0aadfac5fdc33779bc797affd040969b1af5f68fd2b58e0b59f444",
@@ -128,13 +166,13 @@
       "model.mjs": "0284d36d4fac5b9023f8f76aaa8dc44bb3e0d93815a78e501406a4388db9ba4a",
       "analysis.mjs": "6b207c42f923ff4e2a6663f44f5c07adaacf5d0cc2929a6f9ffe6da8f74971c8",
       "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322"
-    },
-    "id": "spell-workspace-v1",
-    "query": "?spell=frostfire&stage=4&view=map"
+    }
   },
   {
-    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727",
     "version": "0.3.0",
+    "id": "ui-pixel-idle-v1",
+    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727",
+    "query": "?variant=A&art=pixel",
     "files": {
       "index.html": "84b823d830df19cfd06a37e693bc5055ab8541fdbbbfc847e423f656cc71f2b6",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
@@ -146,32 +184,30 @@
       "assets/fantasy-pixel-atlas.png": "c2f67d37103ee06161b096473aa08c3399622fbdb48770ea4615c92f8fd7f322",
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
-    },
-    "id": "ui-pixel-idle-v1",
-    "query": "?variant=A&art=pixel"
+    }
   },
   {
-    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d",
     "version": "0.2.0",
+    "id": "ui-painted-v1",
+    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d",
+    "query": "?variant=A&art=fantasy",
     "files": {
       "index.html": "3cc013337ae156b41d934ce06d1c8ec61b7289ad84b353423366068e7aa5e8e6",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
       "prototype.js": "24032e012b50141c3379b2afcd78b6795fe3dc1198c122f68bf25c0596d36fb3",
       "fantasy.css": "1d2c63754b4741de2946ce9212befa4668ce4830323ad8e506fdf1684d4e8641",
       "assets/hushed-glacier-fantasy.png": "34567658e4d286b60634951761595bf22e7470befa3352928f0f15704b28b7a6"
-    },
-    "id": "ui-painted-v1",
-    "query": "?variant=A&art=fantasy"
+    }
   },
   {
-    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0",
     "version": "0.1.0",
+    "id": "ui-layouts-v1",
+    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0",
+    "query": "?variant=A",
     "files": {
       "index.html": "3f2bd8e6fb4334c33b35ab445683f26a997013162890742ee22eb93909014f82",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
       "prototype.js": "11614b4f5b71b293450f632c5ade15b345634541682b419ac8853de8bf82547b"
-    },
-    "id": "ui-layouts-v1",
-    "query": "?variant=A"
+    }
   }
 ]
