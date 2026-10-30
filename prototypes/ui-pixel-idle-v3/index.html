@@ -1,0 +1,45 @@
+<!doctype html>
+<!-- THROWAWAY v3: B's crest, permanent Mage Power and three crest art studies.
+     Question: does one combined rating communicate permanent strength without player levels? -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Pixel idle / 03</title>
+    <link rel="stylesheet" href="prototype.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 03</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>Din magi.<br>Ett eget sigill.</h1>
+            <p class="intro">Ingen XP-level. Din permanenta styrka, samlad i Mage Power.</p>
+            <div class="design-note"><span class="eyebrow">VALD RIKTNING / B</span><h2>Ett crest som kan följa resan</h2><p>Mage Power samlar permanent HP och Spell power. Resurser får riktiga pixelikoner. HP-mätaren visas först i aktiv bossfight.</p></div>
+            <p class="eyebrow">PROVA ETT ÖGONBLICK</p>
+            <div class="scenario-buttons">
+                <button data-scenario="start">01 / Fire realm · 1-1</button>
+                <button data-scenario="gate">02 / Vid bossgrinden · 1-5</button>
+                <button data-scenario="ice">03 / Ice realm · Icebolt</button>
+                <button data-scenario="collection">04 / 240 familiars</button>
+                <button data-scenario="return">05 / Borta i 20 timmar</button>
+            </div>
+            <p class="fine">Klickbar skiss · <a href="https://github.com/Tiico/untitled-mage-game/issues/4" target="_blank" rel="noopener">Uppgift #4</a><br>Illustrativa värden. Inga sparade ändringar.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>0.6.0 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">ATT TA STÄLLNING TILL</p><h2>Känns styrkan som din?</h2>
+            <ol class="review-points"><li><strong>Styrka utan XP-level</strong><p>Är Mage Power, HP och Spell power lätta att förstå? Tryck på crestet för uppdelningen.</p></li><li><strong>Ett sigill att växa i</strong><p>Grundformen är dagens förslag. Pilarna visar två framtida konststudier; de ändrar ingen speldata.</p></li><li><strong>Ikoner som hör till världen</strong><p>Är shardtyperna, HP, Spell power och övriga bilder tydliga i samma stil som Firebolt?</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine"><b>Demonstrationsformel:</b> Mage Power = permanent HP + Spell power.<br>Namnet är accepterat. Viktning och balans återstår.<br>Framtida crestutseenden innebär inget beslut om ascension.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../ui-pixel-idle-v2/?variant=B">0.5.0 · Pixel idle v2 / B ↗</a><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Framtida crestutseenden"><span>CREST-STUDIE</span><button id="previous" aria-label="Föregående crestutseende">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa crestutseende">→</button></nav>
+    <script src="prototype.js"></script>
+</body>
+</html>
