@@ -1,14 +1,16 @@
-# Untitled Mage Game: fusion simulator
+# Untitled Mage Game: design
 
-[Open the simulator](https://Tiico.github.io/untitled-mage-game-simulator/).
+Public prototypes, simulators and supporting documents for shared design review.
 
-This is the public publication mirror for the maintained fusion structure simulator.
-Only simulator assets are copied here; the private game repository and PRD are not published.
-Edit the catalog, rules, UI, tests and maintenance documentation in the game repository, then use scripts/publish-fusion-simulator.ps1.
-Keep the simulator updated in the same change as spells, fusion recipes, gates or costs.
-The deployed page distinguishes approved requirements from proposed content and economy.
+- [Fusion simulator](https://tiico.github.io/untitled-mage-game-design/)
+- [Versioned prototype archive](https://tiico.github.io/untitled-mage-game-design/prototypes/)
+
+This repository is the shared public distribution surface.
+Sources, publication scripts and maintenance rules live in the private game repository.
+Only explicitly approved public files are exported; the private PRD and game source are not published.
+Edit the source there and publish with scripts/publish-fusion-simulator.ps1 or scripts/publish-prototype-pages.ps1.
+Both publishers preserve the simulator and all earlier prototype snapshots.
+The simulator distinguishes approved requirements from proposed content and economy.
 GitHub Actions runs only when a release is published.
 
-Catalog: 2026.10.30.1.
-Reviewed: 2026-10-30.
-Verified source commit: a5e3f55b8524751d6573515f91bf8cd17a4583b0.
+The former untitled-mage-game-simulator repository only redirects old Pages links here.

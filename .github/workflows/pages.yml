@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: fusion-simulator-pages
+  group: design-pages
   cancel-in-progress: false
 
 jobs:
@@ -29,17 +29,17 @@ jobs:
       - name: Stage public simulator and prototype assets
         shell: bash
         run: |
-          mkdir -p "$RUNNER_TEMP/fusion-simulator"
+          mkdir -p "$RUNNER_TEMP/design-pages"
           for asset in index.html style.css app.mjs catalog.mjs model.mjs analysis.mjs; do
-            cp "$asset" "$RUNNER_TEMP/fusion-simulator/"
+            cp "$asset" "$RUNNER_TEMP/design-pages/"
           done
           if [ -d prototypes ]; then
-            cp -R prototypes "$RUNNER_TEMP/fusion-simulator/prototypes"
+            cp -R prototypes "$RUNNER_TEMP/design-pages/prototypes"
           fi
-          touch "$RUNNER_TEMP/fusion-simulator/.nojekyll"
+          touch "$RUNNER_TEMP/design-pages/.nojekyll"
       - uses: actions/upload-pages-artifact@v5.0.0
         with:
-          path: ${{ runner.temp }}/fusion-simulator
+          path: ${{ runner.temp }}/design-pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5.0.1

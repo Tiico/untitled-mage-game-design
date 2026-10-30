@@ -1,16 +1,15 @@
 [
   {
-    "id": "ui-layouts-v1",
     "files": {
       "index.html": "3f2bd8e6fb4334c33b35ab445683f26a997013162890742ee22eb93909014f82",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
       "prototype.js": "11614b4f5b71b293450f632c5ade15b345634541682b419ac8853de8bf82547b"
     },
-    "query": "?variant=A",
-    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0"
+    "id": "ui-layouts-v1",
+    "sourceCommit": "d02da6b6ca92e12756c40b26dd6e1dca303db2f0",
+    "query": "?variant=A"
   },
   {
-    "id": "ui-painted-v1",
     "files": {
       "index.html": "3cc013337ae156b41d934ce06d1c8ec61b7289ad84b353423366068e7aa5e8e6",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
@@ -18,11 +17,11 @@
       "fantasy.css": "1d2c63754b4741de2946ce9212befa4668ce4830323ad8e506fdf1684d4e8641",
       "assets/hushed-glacier-fantasy.png": "34567658e4d286b60634951761595bf22e7470befa3352928f0f15704b28b7a6"
     },
-    "query": "?variant=A&art=fantasy",
-    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d"
+    "id": "ui-painted-v1",
+    "sourceCommit": "e82a49da711cbc6c020210b48cb8ae5a539e6d3d",
+    "query": "?variant=A&art=fantasy"
   },
   {
-    "id": "ui-pixel-idle-v1",
     "files": {
       "index.html": "84b823d830df19cfd06a37e693bc5055ab8541fdbbbfc847e423f656cc71f2b6",
       "prototype.css": "1122b2b4ea9b1dbfe7b51cf45d60fff05f053ff044666a7f2c49941ce3968e54",
@@ -35,7 +34,8 @@
       "assets/idle-clearing-pixel.png": "2947ec32d38bb0d2f3059f9297e8195eb2cee15f02cee0549fa823379421a31d",
       "assets/other-realms-pixel.png": "5fe8d0ab6d8b8d6da39511b92a23049cb7c0da5a22e70eac6d971966d9210c8e"
     },
-    "query": "?variant=A&art=pixel",
-    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727"
+    "id": "ui-pixel-idle-v1",
+    "sourceCommit": "dc2fcd15f323b85d30ee280c70af0d887a20a727",
+    "query": "?variant=A&art=pixel"
   }
 ]
