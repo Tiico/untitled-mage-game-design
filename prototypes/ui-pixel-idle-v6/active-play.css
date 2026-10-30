@@ -1,0 +1,114 @@
+/* Realm progression remains visual and secondary to the world. */
+.realm-trail{display:flex;align-items:center;padding:0 3px;gap:0}
+.trail-stop{display:grid;place-items:center;width:24px;height:28px;flex:0 0 24px}
+.trail-stop>i{display:block;width:10px;height:10px;transform:rotate(45deg);border:1px solid #8a91a2;background:#1c2940;box-shadow:inset 1px 1px #11192c}
+.trail-stop.complete>i{background:#d1b56f;border-color:#f0d697;box-shadow:0 0 5px #d0ab4733}
+.trail-stop.current>i{width:16px;height:16px;border:2px solid #f8d994;background:#a38348;box-shadow:0 0 0 3px #e3bd5a19,0 0 12px #f4d78b55}
+.trail-pipe{height:2px;background:#5a657b;flex:1;box-shadow:0 1px #0f1a2c}
+.trail-pipe.complete{background:#c4a86c}
+.trail-boss{display:grid;place-items:center;width:41px;height:41px;border:1px solid #67738a;background:#19283f;flex-shrink:0;margin-left:4px;box-shadow:inset 1px 1px #46536a}
+.trail-boss .sprite{width:34px;height:34px;filter:saturate(.5);opacity:.7}
+.trail-boss.ready{border-color:#e7bc75;box-shadow:inset 0 0 0 2px #ab915a66,0 0 10px #d9af4833}
+.trail-boss.ready .sprite,.trail-boss.complete .sprite{filter:none;opacity:1}
+.trail-boss.complete{border-color:#9fae85;background:#2b433a}
+.trail-caption{display:flex;justify-content:space-between;color:#aebbd0;font-size:9px;margin:3px 0 10px}
+.realm-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.realm-actions .rune-button{font-size:10px;padding:11px 16px;min-height:46px}
+.map-stage-dot{display:block;width:11px;height:11px;background:#6f7c94;border:1px solid #b2bed0;transform:rotate(45deg);box-shadow:inset 1px 1px #233048}
+.level-choice.current .map-stage-dot{background:#eed08a;border-color:#ffe9b9;box-shadow:0 0 9px #e1b85744}
+
+/* A continuous, forgiving harvest. No timer or score competes with the spell display. */
+.harvest-page{display:flex;flex-direction:column;height:100%;min-height:535px;padding:12px 14px;gap:8px;background:#192238}
+.harvest-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0}
+.harvest-heading h2{font:700 20px/1.2 'Courier New',monospace;color:#f2dcae;margin:3px 0 0}
+.harvest-heading .kicker{font-size:8px;letter-spacing:1px}
+.harvest-heading .text-button{min-height:42px;font-size:10px;padding:4px 6px}
+.harvest-tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border:1px solid #74809a;background:#121e32;flex-shrink:0}
+.harvest-tabs button{font:10px 'Courier New',monospace;background:none;border:0;color:#b9c5d8;min-height:32px;padding:6px}
+.harvest-tabs [aria-pressed=true]{color:#ffe3aa;background:#3b465b;box-shadow:inset 0 -2px #d9b97d}
+.harvest-progress{flex-shrink:0}
+.harvest-progress>div:first-child{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#bbcada;margin-bottom:5px}
+.harvest-progress b{font:700 12px 'Courier New',monospace;color:#e5d2a4}
+.harvest-track{height:6px;background:#101c2e;border:1px solid #76808b;overflow:hidden}
+.harvest-track i{display:block;height:100%;background:linear-gradient(90deg,#8a9c7b,#f3d78d);box-shadow:0 0 10px #ebcf8c44;transition:width .22s ease-out}
+.harvest-tallies{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:20px;flex-shrink:0;font-size:10px;color:#bbcbd8}
+.harvest-tallies>span{display:flex;align-items:center;gap:4px}
+.harvest-tallies>span:last-child{color:#b5cfaa}
+.harvest-tallies b{color:#ffe0a3;font:700 13px 'Courier New',monospace}
+.harvest-tallies .inline-icon{width:19px;height:19px;margin:0}
+.harvest-field{position:relative;isolation:isolate;flex:1;min-height:205px;overflow:hidden;border:2px solid #9b8b6d;background:#253a37;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;--magic:#ffc370}
+.harvest-field .scenery{background-position:var(--realm-x) 50%;background-size:300% 100%;opacity:.82}
+.harvest-field .scenery.ice{background-size:cover;background-position:center}
+.harvest-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(#142139b8,transparent 36%,#14213966)}
+.harvest-instruction{position:absolute;top:9px;left:8px;right:8px;text-align:center;font:10px/1.4 'Courier New',monospace;color:#f5e3ba;text-shadow:1px 2px #122239;pointer-events:none;z-index:2}
+.harvest-targets{position:absolute;left:9%;right:9%;top:28px;bottom:68px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);align-items:center;justify-items:center;gap:4px 10px}
+.harvest-target{position:relative;display:grid;place-items:center;width:58px;height:60px;isolation:isolate}
+.harvest-target>.sprite{width:54px;height:54px;z-index:1;transform-origin:50% 80%;transition:opacity .18s,transform .18s}
+.target-ground{position:absolute;bottom:3px;left:10%;right:10%;height:9px;background:#17253c70;border-radius:50%;z-index:0;transition:opacity .2s}
+.harvest-target.cleared>.sprite,.harvest-target.cleared>.harvest-crystal{opacity:0;transform:scale(.25) translateY(-8px)}
+.harvest-target.cleared .target-ground{opacity:.25}
+.harvest-target.cleared::before{content:'';position:absolute;inset:18px;border:1px solid #c3d69b44;border-radius:50%;background:#c3d69b0a}
+.harvest-mage{position:absolute;bottom:13px;left:calc(50% - 31px);width:62px;height:62px;pointer-events:none;z-index:2}
+.harvest-mage>.sprite{width:62px;height:62px}
+.harvest-mage-glow{position:absolute;top:12px;right:0;width:23px;height:23px;background:radial-gradient(circle,var(--magic),transparent 70%);opacity:0}
+.harvest-mage.casting .harvest-mage-glow{animation:harvest-glow .5s ease-out}
+.harvest-mage.casting>.sprite{animation:harvest-cast .5s ease-out}
+.harvest-field-caption{position:absolute;bottom:5px;left:6px;right:6px;color:#e3dfca;font:9px/1.3 'Courier New',monospace;text-align:center;text-shadow:1px 2px #152239;pointer-events:none;z-index:3}
+.harvest-effects{position:absolute;inset:0;pointer-events:none;z-index:5}
+.harvest-bolt{position:absolute;width:34px;height:34px;left:var(--x);top:var(--y);margin:-17px;animation:harvest-flight .22s ease-in both;filter:drop-shadow(0 0 4px var(--magic))}
+.harvest-bolt>.sprite{width:34px;height:34px}
+.harvest-target.impact>.sprite,.harvest-target.impact>.harvest-crystal{animation:harvest-impact .3s ease-out}
+.harvest-target.impact::after{content:'';position:absolute;inset:-7px;background:radial-gradient(circle,#fff6d4cc,transparent 35%,var(--magic),transparent 65%);border-radius:50%;animation:harvest-burst .45s ease-out both;z-index:3;pointer-events:none}
+.harvest-hit-number{position:absolute;top:0;left:0;right:0;font:700 13px 'Courier New',monospace;text-shadow:1px 2px #182237;color:#ffe8be;text-align:center;opacity:0;z-index:6;pointer-events:none}
+.harvest-target.impact .harvest-hit-number{animation:harvest-number .65s ease-out both}
+.harvest-loot{position:absolute;display:flex;align-items:center;gap:2px;top:13px;left:12px;opacity:0;pointer-events:none;z-index:6;color:#ffe2a6;font:700 12px 'Courier New',monospace;white-space:nowrap}
+.harvest-loot>.ui-icon{width:22px;height:22px}
+.loot-pop .harvest-loot{animation:harvest-loot .9s ease-out both}
+.harvest-celebration{position:absolute;inset:23% 8% auto;padding:16px 8px;text-align:center;border:1px solid #e3c27b;background:#1a2b35ee;box-shadow:0 3px 0 #0b1529,0 0 26px #d4be6d22;opacity:0;pointer-events:none;z-index:8;transform:translateY(5px)}
+.harvest-celebration.visible{opacity:1;transform:translateY(0);transition:opacity .2s,transform .2s}
+.harvest-celebration>.ui-icon{width:32px;height:32px;margin:auto auto 6px}
+.harvest-celebration strong{display:block;font:700 14px/1.4 'Courier New',monospace;color:#f4dba3}
+.harvest-celebration>span:last-child{display:block;font:10px/1.5 system-ui;color:#b7c9ad;margin-top:4px}
+.harvest-spells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;flex-shrink:0}
+.harvest-spell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:70px;padding:5px 3px;border:2px solid #65758d;background:linear-gradient(#303b50,#233048);color:#ebd9b5}
+.harvest-spell>.sprite{width:31px;height:30px}
+.harvest-spell b{font:700 9px/1.2 'Courier New',monospace;text-align:center;min-height:11px}
+.harvest-spell small{font:8px/1.3 system-ui;color:#bdcad9;white-space:nowrap}
+.harvest-spell[aria-pressed=true]{border-color:#e9c982;background:linear-gradient(#514939,#31394b);box-shadow:inset 0 0 0 1px #a28c5a}
+.harvest-cast{display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;min-height:48px;padding:7px 22px;touch-action:none;-webkit-user-select:none;user-select:none}
+.harvest-cast>.sprite{width:29px;height:29px}
+.harvest-cast>span:last-child{display:flex;flex-direction:column;gap:3px;font-size:12px;line-height:1.1}
+.harvest-cast small{font:9px/1.3 system-ui;color:#ece4ce}
+.harvest-cast.holding{background:#856c3f;box-shadow:inset 0 0 0 2px #ffe5a466,0 0 13px #e3bf6c22}
+.harvest-note{margin:0;color:#b7c6d7;text-align:center;font-size:10px;line-height:1.4;flex-shrink:0}
+.harvest-crystal{width:43px;height:48px;z-index:1;filter:drop-shadow(0 3px 3px #111a2a99);transition:opacity .18s,transform .18s}
+.mode-crystals .harvest-targets{inset:35px 12% 63px;gap:4px 13px;padding:4px 6px;border:1px solid #cbb68b55;background:#26353850;box-shadow:inset 0 0 0 3px #b8a27510}
+.mode-crystals .harvest-target{width:64px;height:64px;background:radial-gradient(ellipse at 50% 72%,#d3c38f22,transparent 70%);border-bottom:2px solid #bca87e44}
+.mode-crystals .target-ground{border-radius:0;background:#14223555;height:5px;bottom:3px}
+.crystal-fracture{position:absolute;left:10%;right:10%;bottom:5px;height:5px;border-left:9px solid #9fadb0;border-right:6px solid #c7cdba;opacity:0;transition:opacity .15s;z-index:2}
+.cracked .crystal-fracture{opacity:.8}
+.target-crack{position:absolute;width:23px;height:26px;top:13px;left:20px;background:linear-gradient(125deg,transparent 40%,#101d30 42%,#f3e0ac 46%,transparent 49%,transparent 64%,#142238 66%,transparent 72%);opacity:0;pointer-events:none;z-index:2}
+.mode-crystals .cracked:not(.cleared) .target-crack{opacity:calc(1 - var(--hp))}
+.mode-crystals .cleared .harvest-crystal{opacity:0}
+.mode-clearing.realm-fire .harvest-target>.sprite{filter:hue-rotate(145deg)}
+.mode-clearing.realm-earth .harvest-target>.sprite{filter:hue-rotate(285deg)}
+.mode-clearing.realm-wind .harvest-target>.sprite{filter:hue-rotate(40deg)}
+.harvest-field[data-active-spell=ice]{--magic:#9de1ff}
+.harvest-field[data-active-spell=frost]{--magic:#c4a3ff}
+.harvest-field[data-active-spell=frost] .harvest-target.impact::after{background:radial-gradient(circle,#fff3d4dd,transparent 35%,#ffbb6e88 43%,transparent 49%,#bcefffaa 57%,transparent 67%)}
+@keyframes harvest-flight{from{opacity:1;transform:translate(0,0) scale(.7)}to{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1.1)}}
+@keyframes harvest-burst{from{opacity:1;transform:scale(.4)}to{opacity:0;transform:scale(1.35)}}
+@keyframes harvest-impact{0%{transform:scale(1)}35%{transform:scale(1.12,.85)}100%{transform:scale(1)}}
+@keyframes harvest-number{from{opacity:1;transform:translateY(-8px)}to{opacity:0;transform:translateY(-24px)}}
+@keyframes harvest-loot{0%{opacity:0;transform:translateY(8px) scale(.7)}25%{opacity:1;transform:translateY(-9px) scale(1)}70%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(.6)}}
+@keyframes harvest-glow{0%,20%{opacity:1}100%{opacity:0}}
+@keyframes harvest-cast{0%,100%{transform:translateY(0)}25%{transform:translateY(-2px)}}
+@media(max-width:360px){.realm-actions{gap:7px}.realm-actions .rune-button{font-size:9px;padding-inline:15px}.harvest-page{padding:9px 11px;gap:6px;min-height:510px}.harvest-heading h2{font-size:18px}.harvest-heading .kicker{font-size:7px}.harvest-tabs button{font-size:9px;min-height:30px}.harvest-spell{min-height:65px}.harvest-spell b{font-size:8px}.harvest-spell small{font-size:7px}.harvest-note{font-size:9px}.harvest-field{min-height:200px}.harvest-targets{left:6%;right:6%;bottom:64px;top:25px;gap:1px 6px}.harvest-target{width:51px;height:51px}.harvest-target>.sprite{width:47px;height:47px}.harvest-mage{bottom:11px;width:52px;height:52px;left:calc(50% - 26px)}.harvest-mage>.sprite{width:52px;height:52px}.harvest-instruction{font-size:9px;top:7px}.harvest-field-caption{font-size:8px}.mode-crystals .harvest-targets{inset:28px 8% 64px;padding:2px;gap:2px 5px}.mode-crystals .harvest-target{width:53px;height:53px}.harvest-crystal{width:35px;height:42px}.target-crack{left:15px;top:10px}.harvest-cast{min-height:45px}.harvest-cast>span:last-child{font-size:11px}.harvest-celebration strong{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.harvest-bolt,.harvest-target.impact::after,.harvest-hit-number,.harvest-loot,.harvest-mage-glow{display:none}.harvest-target>.sprite,.harvest-crystal,.harvest-mage>.sprite{transform:none!important}.harvest-target.cleared>.sprite,.harvest-target.cleared>.harvest-crystal{opacity:0}.harvest-celebration.visible{transform:none}}
+
+.harvest-spell.is-locked{background:#1c293e;border-color:#495970;color:#adbbcf}
+.harvest-spell.is-locked>.sprite{filter:grayscale(.85) brightness(.65);opacity:.65}
+.harvest-spell.is-locked small{color:#98aabf}
+
+.harvest-spell.ready-to-craft{border-color:#9ebc89;background:#2c3f38;color:#e0e8c8}
+.harvest-spell.ready-to-craft small{color:#d7e9b6}
