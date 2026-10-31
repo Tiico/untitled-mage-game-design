@@ -1,9 +1,9 @@
 // The simulator catalog. Proposed content is never an implicit PRD decision.
 export const metadata = {
-    version: '2026.10.30.8',
-    prdVersion: '1.8',
-    lastReviewed: '2026-10-30',
-    sourcePrdSha256: '165996240281d83f26e5f83f7e27d8f97cb227aa5206244c294cb8625f0256bb'
+    version: '2026.10.31.1',
+    prdVersion: '1.9',
+    lastReviewed: '2026-10-31',
+    sourcePrdSha256: '224c398cbb5ca2bd424f7dac93f55baea37708e0d218aee945000fb0501a4ca2'
 };
 export const realms = ['Fire', 'Ice', 'Earth', 'Wind'];
 export const rules = {
@@ -18,12 +18,12 @@ export const spells = [
     {id:'stone',name:'Stone Spike',symbol:'◆',color:'#cdbb8b',realm:2,level:2,cost:10,role:'Proposal: a heavy single-target strike.',x:135,y:290},
     {id:'gale',name:'Gale Blade',symbol:'≋',color:'#b7dba8',realm:3,level:3,cost:10,role:'Proposal: a fast sweeping projectile.',x:135,y:390},
     {id:'ember',name:'Ember Ring',symbol:'◉',color:'#f6a47f',realm:0,level:1,cost:10,role:'Proposal: close-range area damage.',x:135,y:490},
-    {id:'ward',name:'Frost Ward',symbol:'◇',color:'#9cd5e3',realm:1,level:1,cost:10,role:'Proposal: a defensive self-buff.',x:135,y:590},
+    {id:'ward',name:'Frost Ward',symbol:'◇',color:'#9cd5e3',realm:1,level:1,cost:10,role:'Proposal: a self-cast shield that absorbs incoming damage.',x:135,y:590},
     {id:'frostfire',name:'Frostfire Bolt',symbol:'✧',color:'#d2c0ee',level:2,inputs:['fire','ice'],known:true,role:'PRD: a clear power increase over the starting spells.',x:470,y:90},
     {id:'magma',name:'Magma Lance',symbol:'⟐',color:'#e6b18e',level:2,inputs:['fire','stone'],role:'Proposal: a stronger heavy strike.',x:470,y:210},
     {id:'hail',name:'Hailstorm',symbol:'⁕',color:'#b4ded9',level:3,inputs:['ice','gale'],role:'Proposal: a stronger sweeping storm.',x:470,y:330},
     {id:'vortex',name:'Cinder Vortex',symbol:'◎',color:'#e5c28f',level:3,inputs:['ember','gale'],role:'Proposal: a stronger area attack.',x:470,y:450},
-    {id:'bastion',name:'Glacial Bastion',symbol:'⬡',color:'#bdcfcf',level:2,inputs:['ward','stone'],role:'Proposal: a stronger defensive self-buff.',x:470,y:570},
+    {id:'bastion',name:'Glacial Bastion',symbol:'⬡',color:'#bdcfcf',level:2,inputs:['ward','stone'],role:'Proposal: a stronger shield with an accompanying temporary defensive buff.',x:470,y:570},
     {id:'tempest',name:'Tempest Crown',symbol:'♜',color:'#d4ddae',level:3,inputs:['frostfire','hail'],role:'Proposal: the multi-step offensive payoff. Uses two already-fused spells.',x:805,y:330}
 ];
 
@@ -45,7 +45,6 @@ function withProposal(catalog,candidates) {
 
 export const withConeProposal=catalog=>withProposal(catalog,coneProposal);
 export const shieldProposal = [
-    {id:'arcane-surge',name:'Arcane Surge',symbol:'✧',color:'#c4a5f4',realm:2,level:2,cost:10,role:'Proposal: a temporary self-buff that increases offensive spell damage. Duration and multiplier are illustrative; no permanent Spell power increase.'},
-    {id:'fire-shield',name:'Fire Shield',symbol:'⬡',color:'#f5bb79',level:2,inputs:['ward','fire'],role:'PO example: shield + offense. A landed attack against the barrier sends several smaller bolts to that attacker, including absorbed hits. Proc rules, capacity and values are proposals.'}
+    {id:'fire-shield',name:'Fire Shield',symbol:'⬡',color:'#f5bb79',level:2,inputs:['ward','fire'],role:'PO example: one shield spell combines a barrier, a temporary offensive buff while intact and smaller bolts back at the attacker, including absorbed hits. No separate buff spell or slot. Buff coupling, proc rules, capacity and values are proposals.'}
 ];
 export const withShieldProposal=catalog=>withProposal(catalog,shieldProposal);

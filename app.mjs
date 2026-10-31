@@ -239,10 +239,10 @@ $('import-file').onchange = async event => {
     event.target.value = '';
 };
 $('cone-proposal').onclick=()=>{try{const next=withConeProposal(catalog);if(applyCatalog(next)){selected='frostfire-cone';milestone=3;view='map';render();notify('PO swarm proposal added as local drafts. Existing drafts and the shared 6 + 6 catalog were kept.');}}catch(error){notify(error.message,true);}};
-$('shield-proposal').onclick=()=>{try{const next=withShieldProposal(catalog);if(applyCatalog(next)){selected='fire-shield';milestone=2;view='map';render();notify('Shield and buff proposal added as local drafts. Frost Ward is reused; existing drafts and the shared 6 + 6 catalog were kept.');}}catch(error){notify(error.message,true);}};
+$('shield-proposal').onclick=()=>{try{const next=withShieldProposal(catalog);if(applyCatalog(next)){selected='fire-shield';milestone=2;view='map';render();notify('Shield proposal added: barrier + buff + retaliation in one spell. Existing drafts and the shared 6 + 6 structure were kept.');}}catch(error){notify(error.message,true);}};
 $('catalog-version').textContent = `CATALOG ${metadata.version}`;
 render();
 if (startupNotice) notify(startupNotice,true);
 else if(query.get('proposal')==='swarm-cone')notify('PO proposal: Frostfire Bolt + a cone-shaped spell → Frostfire Cone. Use “Add swarm proposal” to explore it as local drafts; your current workspace is kept.');
 
-if(query.get('proposal')==='shield-buff'&&!startupNotice)notify('PO proposal: temporary buffs and Frost Ward + Firebolt → Fire Shield. Use “Add shield proposal” to explore local drafts; your saved workspace is kept.');
+if(query.get('proposal')==='shield-buff'&&!startupNotice)notify('PO proposal: buffs belong to shields. Frost Ward + Firebolt → Fire Shield combines barrier, buff and retaliation. Use “Add shield proposal” to explore local drafts; your saved workspace is kept.');
