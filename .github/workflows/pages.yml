@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/design-pages"
-          for asset in index.html style.css app.mjs catalog.mjs model.mjs analysis.mjs; do
+          for asset in index.html style.css app.mjs catalog.mjs model.mjs analysis.mjs rarity-model.js; do
             cp "$asset" "$RUNNER_TEMP/design-pages/"
           done
           mkdir -p "$RUNNER_TEMP/design-pages/assets"

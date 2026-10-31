@@ -11,6 +11,7 @@ let selected = query.get('spell') || '';
 let milestone = /^[0-4]$/.test(query.get('stage')) ? Number(query.get('stage')) : 4;
 let view = query.get('view') === 'recipes' ? 'recipes' : 'map';
 let catalog = normalizeWorkspace(workspaceDocument(spells));
+let rarityInputs=[4,0];
 let analysis, choiceA = 'fire', choiceB = 'ice', editingId = null;
 let storageAvailable = true;
 let startupNotice = '';
@@ -92,6 +93,11 @@ function renderConnections() {
     $('milestone').value = milestone;
     $('availability-summary').textContent = `${available.size} / ${catalog.length} available · Forge cap ${analysis.stages[milestone].forge} · ${stageNames[milestone]}`;
 }
+function rarityPreview(spell){
+    if(!spell.inputs)return '';
+    const q=MageRarity.quote({id:spell.id,result:spell.id,level:spell.level,inputs:spell.inputs},Object.fromEntries(spell.inputs.map((id,i)=>[id,rarityInputs[i]])));
+    return `<section class="rarity-preview"><h3>Rarity risk · proposal</h3><p>Both ingredients stay. Every valid attempt costs resources. A lower outcome never downgrades your best owned version.</p><div class="rarity-inputs">${spell.inputs.map((id,i)=>`<label>${escape(find(id).name)}<select data-rarity-input="${i}">${MageRarity.tiers.map((t,n)=>`<option value="${n}" ${rarityInputs[i]===n?'selected':''}>${t}</option>`).join('')}</select></label>`).join('')}</div><div class="rarity-probabilities">${q.odds.map((n,i)=>`<span style="--rarity:${MageRarity.colors[i]}"><small>${MageRarity.tiers[i]}</small><b>${n/100}%</b></span>`).join('')}</div><p><b>Per attempt: ${q.cost.fire} Fire shards${q.cost.ore?' + '+q.cost.ore+' ore':''}</b></p><small>100% total · Illustrative costs and probabilities. The forge path analysis does not simulate rarity rolls.</small></section>`;
+}
 function renderInspector() {
     const spell = find(selected);
     if (!spell) {
@@ -99,7 +105,8 @@ function renderInspector() {
         return;
     }
     const details = analysis.bySpell[spell.id], available = analysis.stages[milestone].reachable.includes(spell.id);
-    $('inspector').innerHTML = `<span class="eyebrow">Spell details</span>${badge(spell)}<div class="inspector-hero">${icon(spell)}</div><h2>${escape(spell.name)}</h2><p>${escape(spell.role)}</p><dl class="facts"><div><dt>Type</dt><dd>${spell.inputs?'Fusion':'Base spell'}</dd></div><div><dt>Forge requirement</dt><dd>${spell.level}</dd></div><div><dt>Earliest availability</dt><dd>${stageNames[details.earliestStage]||'Unreachable'}</dd></div><div><dt>Selected milestone</dt><dd>${available?'Available':'Gated'}</dd></div>${!spell.inputs?`<div><dt>Acquisition</dt><dd>${spell.id==='fire'&&spell.level===0?'Starting spell':`${spell.cost} ${realms[spell.realm].toLowerCase()} shards`}</dd></div>`:''}</dl><h3>${spell.inputs?'Made from':'Acquisition route'}</h3>${spell.inputs?spell.inputs.map(spellButton).join(''):'<p>Shard crafting and finished-spell drops. No spell levels.</p>'}<h3>Used in ${details.usedBy.length} ${details.usedBy.length===1?'recipe':'recipes'}</h3>${details.usedBy.length?details.usedBy.map(spellButton).join(''):'<p>No further fusion in this catalog yet.</p>'}<div class="inspector-actions"><button id="edit-spell" class="primary">${spell.draft?'Edit draft':'Edit as local draft'}</button><button id="extend-spell">+ Build a fusion with this spell</button>${spell.draft?'<button id="remove-draft">'+(spells.some(item=>item.id===spell.id)?'Restore catalog version':'Remove draft')+'</button>':''}</div>`;
+    $('inspector').innerHTML = `<span class="eyebrow">Spell details</span>${badge(spell)}<div class="inspector-hero">${icon(spell)}</div><h2>${escape(spell.name)}</h2><p>${escape(spell.role)}</p><dl class="facts"><div><dt>Type</dt><dd>${spell.inputs?'Fusion':'Base spell'}</dd></div><div><dt>Forge requirement</dt><dd>${spell.level}</dd></div><div><dt>Earliest availability</dt><dd>${stageNames[details.earliestStage]||'Unreachable'}</dd></div><div><dt>Selected milestone</dt><dd>${available?'Available':'Gated'}</dd></div>${!spell.inputs?`<div><dt>Acquisition</dt><dd>${spell.id==='fire'&&spell.level===0?'Starting spell':`${spell.cost} ${realms[spell.realm].toLowerCase()} shards`}</dd></div>`:''}</dl><h3>${spell.inputs?'Made from':'Acquisition route'}</h3>${spell.inputs?spell.inputs.map(spellButton).join(''):'<p>Shard crafting and finished-spell drops. No spell levels.</p>'}<h3>Used in ${details.usedBy.length} ${details.usedBy.length===1?'recipe':'recipes'}</h3>${details.usedBy.length?details.usedBy.map(spellButton).join(''):'<p>No further fusion in this catalog yet.</p>'}<div class="inspector-actions"><button id="edit-spell" class="primary">${spell.draft?'Edit draft':'Edit as local draft'}</button><button id="extend-spell">+ Build a fusion with this spell</button>${spell.draft?'<button id="remove-draft">'+(spells.some(item=>item.id===spell.id)?'Restore catalog version':'Remove draft')+'</button>':''}</div>${rarityPreview(spell)}`;
+    $('inspector').querySelectorAll('[data-rarity-input]').forEach(el=>el.onchange=()=>{rarityInputs[Number(el.dataset.rarityInput)]=Number(el.value);renderInspector();});
     $('edit-spell').onclick = () => openEditor(spell);
     $('extend-spell').onclick = () => openEditor(null,[spell.id,'']);
     if (spell.draft) $('remove-draft').onclick = () => {
@@ -246,3 +253,5 @@ if (startupNotice) notify(startupNotice,true);
 else if(query.get('proposal')==='swarm-cone')notify('PO proposal: Frostfire Bolt + a cone-shaped spell → Frostfire Cone. Use “Add swarm proposal” to explore it as local drafts; your current workspace is kept.');
 
 if(query.get('proposal')==='shield-buff'&&!startupNotice)notify('PO proposal: buffs belong to shields. Frost Ward + Firebolt → Fire Shield combines barrier, buff and retaliation. Use “Add shield proposal” to explore local drafts; your saved workspace is kept.');
+
+if(query.get('proposal')==='rarity-risk'&&!startupNotice)notify('Rarity study: select a fusion to inspect odds and costs. Both ingredients stay. Existing drafts are kept.');
