@@ -9,11 +9,11 @@ const FusionModel = (() => {
     function reduce(state,action) {
         const s = {...state,owned:[...state.owned],discovered:[...state.discovered],shards:[...state.shards],log:[...state.log]};
         if(action.type === 'boss') {
-            if(s.bosses === 4) return finish(s,'All four bosses are defeated. Farming and collecting remain available.',true);
+            if(s.bosses === 4) return finish(s,'All four initial realm-guardian milestones are complete. Later tiers continue in the journey prototype.',true);
             const name = realms[s.bosses++];
             if(s.bosses === 1) s.forge = 1;
             s.essence += rules.bossRewards[s.bosses - 1];
-            return finish(s,`${name} boss victory simulated. ${s.bosses===1?'Ice, forge level 1 and side activities open.':s.bosses===2?'Earth opens. +80 proposed essence covers the level 2 upgrade (20) and Frostfire (30).':s.bosses===3?'Wind opens. +80 proposed essence; forge level 3 can now be purchased.':'The first-version realm chain is complete.'}`);
+            return finish(s,`${name} boss victory simulated. ${s.bosses===1?'Ice, forge level 1 and side activities open.':s.bosses===2?'Earth opens. +80 proposed essence covers the level 2 upgrade (20) and Frostfire (30).':s.bosses===3?'Wind opens. +80 proposed essence; forge level 3 can now be purchased.':'Tier 1 guardian milestones are complete. Fire tier 2 opens in the journey model.'}`);
         }
         if(action.type === 'farm') {
             const realm = action.realm;
