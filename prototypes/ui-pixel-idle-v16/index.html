@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- REVIEW PROTOTYPE v16: selected A, realm-tier circuits and separate idle/boss nodes. -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Realm tiers / 16</title>
+    <link rel="stylesheet" href="prototype.css">
+    <link rel="stylesheet" href="active-play.css">
+    <link rel="stylesheet" href="clarity.css">
+    <link rel="stylesheet" href="navigation-rarity.css">
+    <link rel="stylesheet" href="dungeons.css">
+    <link rel="stylesheet" href="world-map.css">
+    <link rel="stylesheet" href="realm-discoveries.css">
+    <link rel="stylesheet" href="realm-progression.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 14</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>En värld.<br>Nya varv.</h1>
+            <p class="intro">A är vald. Tier är varvet genom fyra realms — noderna är vägen genom varje realm.</p>
+            <div class="design-note"><span class="eyebrow">REALM → NODER → NÄSTA TIER</span><h2>Fire 1 → Ice 1 → Earth 1 → Wind 1 → Fire 2</h2><p>Varje realm har idle-farming och flera manuella bossgrindar. Nästa tier ger starkare monster och ny loot.</p></div>
+            <p class="eyebrow">PROVA RESAN</p><div class="scenario-buttons"><button data-journey-scenario="route">01 / Fire tier 1 · Nod 12/25</button><button data-journey-scenario="gate">02 / Bossgrind på vägen</button><button data-journey-scenario="fireEnd">03 / Fire klar → Ice tier 1</button><button data-journey-scenario="windEnd">04 / Wind klar → Fire tier 2</button><button data-journey-scenario="tier2">05 / Nytt varv · Starkare fiender</button><button data-journey-scenario="revisit">06 / Återbesök tidigare tier</button></div><div class="journey-demo-buttons"><button data-progression-advance>Klara idle-nod</button><button data-journey-demo-win>Visa bossvinst</button></div>
+            <p class="fine">Klickbar granskningssimulering · <a href="https://github.com/Tiico/untitled-mage-game/issues/14">Uppgift #14</a><br>25 noder, bossar på 6/13/19/25, skalning och loot är exempel. Ingen sparad progression.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>0.28.0 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">VALD RIKTNING / KORRIGERAD MODELL</p><h2>Tre olika koordinater</h2><ol class="review-points"><li><strong>Tier 1</strong><p>Sigillet visar varvet. Alla fyra realms klaras innan nästa tier öppnas.</p></li><li><strong>Fire realm</strong><p>Miljö och lootkälla inom varvet. Tidigare realm/tier-par kan alltid återbesökas.</p></li><li><strong>Node 12 / 25</strong><p>Aktuell plats på realm-vägen. Bossar bryter av idle-farmingen; den stannar före varje obesegrad boss.</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine"><b>Demonstrationsformel:</b> Mage Power = permanent HP + Spell power.<br>Namnet är accepterat. Viktning och balans återstår.<br>B:s navigation och tidigare spelriktning är valda. Realm-fyndens namn, effekter, poolstorlek, intervall och odds är förslag. Platsnamn, vägantal och kartpositioner är också förslag; dungeonregler och belöningsvärden är fortsatt öppna. Raritetsnamn, odds, kostnader och skadeskalning är illustrativa. Framtida funktioner i griden är enbart exempel.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../spell-workspace-v10/?spell=ice&stage=2&view=map">0.27.0 · Realm tiers i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v15/?progression=A">0.26.0 · A vald / tidigare nodtolkning ↗</a><a target="_top" href="../spell-workspace-v9/?spell=ice&stage=2&view=map">0.25.0 · Numrerad realm-riktning i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v14/?study=start">0.24.0 · Realm-fynd med otursskydd ↗</a><a target="_top" href="../spell-workspace-v8/?spell=ice&stage=2&view=map">0.23.0 · Realm-fynd i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v13/?study=start">0.22.0 · Kompakta namngivna platser ↗</a><a target="_top" href="../spell-workspace-v7/?spell=ice&stage=2&view=map">0.21.0 · Namngivna platser i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v12/?study=start">0.20.0 · Idle-overlay & dungeons ↗</a><a target="_top" href="../spell-workspace-v6/?spell=ice&stage=2&view=map">0.19.0 · Dagliga resursvägar i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v11/?nav=B&study=rarity">0.18.0 · Navigation A/B/C & raritetsrisk ↗</a><a target="_top" href="../spell-workspace-v5/?proposal=rarity-risk&spell=frostfire&stage=2&view=map">0.17.0 · Raritetsrisk i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v10/?study=shieldSwarm">0.16.0 · Sköldegenskaper ↗</a><a target="_top" href="../spell-workspace-v4/?proposal=shield-buff&stage=2&view=map">0.15.0 · Sköldegenskaper i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v9/?study=start">0.14.0 · Kompakt mobil & mindre text ↗</a><a target="_top" href="../ui-pixel-idle-v8/?variant=B&study=buffSwarm">0.13.0 · Vald B & Fire Shield ↗</a><a target="_top" href="../spell-workspace-v3/?proposal=shield-buff&stage=2&view=map">0.12.0 · Buff- och sköldförslag ↗</a><a target="_top" href="../ui-pixel-idle-v7/?variant=B&view=active">0.11.0 · Svärmar & konfusion / B vald ↗</a><a target="_top" href="../spell-workspace-v2/?proposal=swarm-cone&stage=3&view=map">0.10.0 · Konfusion i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v6/?variant=B">0.9.0 · Lugn avverkning ↗</a><a target="_top" href="../ui-pixel-idle-v5/?variant=B">0.8.0 · Målval, puls & kedja ↗</a><a target="_top" href="../ui-pixel-idle-v4/?variant=B">0.7.0 · Visuell finish & spellcykel ↗</a><a target="_top" href="../ui-pixel-idle-v3/?variant=B">0.6.0 · Mage Power & crest ↗</a><a target="_top" href="../ui-pixel-idle-v2/?variant=B">0.5.0 · Pixel idle v2 / B ↗</a><a target="_top" href="../spell-workspace-v1/?spell=frostfire&stage=4&view=map">0.4.0 · Spellforge designverktyg ↗</a><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">0.3.0 · Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">0.2.0 · Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">0.1.0 · Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Jämför granskningsscener"><span>B · VALD</span><button id="previous" aria-label="Föregående scen">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa scen">→</button></nav>
+    <script src="rarity-model.js"></script>
+    <script src="dungeon-model.js"></script>
+    <script src="dungeons.js"></script>
+    <script src="navigation.js"></script>
+    <script src="realm-model.js"></script>
+    <script src="idle-spells-model.js"></script>
+    <script src="realm-discoveries.js"></script>
+    <script src="world-map.js"></script>
+    <script src="realm-progression.js"></script>
+    <script src="presentation.js"></script>
+    <script src="support-model.js"></script>
+    <script src="activity-model.js"></script>
+    <script src="active-play.js"></script>
+    <script src="swarm-boss.js"></script>
+    <script src="prototype.js"></script>
+</body>
+</html>
