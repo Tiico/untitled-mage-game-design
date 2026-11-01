@@ -1,0 +1,51 @@
+<!doctype html>
+<!-- REVIEW PROTOTYPE v13: variable named realm places; full route in the atlas, compact context in the idle scene. -->
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Mage · Pixel idle / 13</title>
+    <link rel="stylesheet" href="prototype.css">
+    <link rel="stylesheet" href="active-play.css">
+    <link rel="stylesheet" href="clarity.css">
+    <link rel="stylesheet" href="navigation-rarity.css">
+    <link rel="stylesheet" href="dungeons.css">
+    <link rel="stylesheet" href="world-map.css">
+</head>
+<body>
+    <main class="studio">
+        <aside class="brief">
+            <a class="wordmark" href="../" target="_top">✧ MAGE <small>DESIGN STUDIES / 13</small></a>
+            <p class="eyebrow">PIXEL IDLE · NY ITERATION</p>
+            <h1>Mer värld.<br>Mindre nivårad.</h1>
+            <p class="intro">Namngivna platser och olika långa resor. Hela vägen finns i kartan; idle-scenen får mer plats.</p>
+            <div class="design-note"><span class="eyebrow">PLATSER / NY RIKTNING</span><h2>En resa genom världen</h2><p>Det behöver inte vara fem farmingsteg. Kartan visar riktiga platser och en separat bossplats, med varierande väg per realm.</p></div>
+            <p class="eyebrow">PROVA ETT ÖGONBLICK</p><div class="scenario-buttons"><button data-scenario="start">01 / Mer plats för idle</button><button data-scenario="places">02 / Earth-kartan</button><button data-scenario="gate">03 / Framför bossen</button><button data-scenario="revisit">04 / Återbesök</button><button data-scenario="return">05 / Idle rewards</button><button data-scenario="dungeons">06 / Dungeons</button></div><p class="fine">Klickbar skiss · <a href="https://github.com/Tiico/untitled-mage-game/issues/10" target="_blank" rel="noopener">Uppgift #10</a><br>Illustrativa värden. Inga sparade ändringar.</p>
+        </aside>
+        <section class="device-stage" aria-label="Interaktiv mobilprototyp">
+            <div class="device"><div id="phone" lang="en"></div></div>
+            <div class="device-caption"><span>●</span> PORTRAIT / PIXEL IDLE <span>0.22.0 · REVIEW BUILD</span></div>
+        </section>
+        <aside class="review">
+            <p class="eyebrow">ATT TA STÄLLNING TILL</p><h2>Är resan tydlig utan en stor nivårad?</h2><ol class="review-points"><li><strong>Aktuell plats i scenen</strong><p>Namn, liten vägindikator och lokalt framsteg. Tryck på platsen för kartan.</p></li><li><strong>Hela vägen i kartan</strong><p>Olika antal farmingplatser per realm. Klara, aktuella och låsta platser skiljs från bossens plats.</p></li><li><strong>Återvänd fritt</strong><p>Farma tidigare platser och återgå till framkanten. Idle går aldrig in i en obesegrad boss automatiskt.</p></li></ol>
+            <div class="review-actions"><p class="eyebrow">GENVÄGAR I PROTOTYPEN</p><div id="review-links"></div><button data-demo="advance">Nästa farmingsteg</button><button data-demo="win">Visa bossvinst</button><button data-demo="lose">Visa bossförlust</button><button data-demo="cap">Nå 12-timmarstaket</button></div>
+            <details><summary>Prototyptillstånd</summary><pre id="state"></pre></details>
+            <p class="fine"><b>Demonstrationsformel:</b> Mage Power = permanent HP + Spell power.<br>Namnet är accepterat. Viktning och balans återstår.<br>B:s navigation och tidigare spelriktning är valda. Platsnamn, vägantal och kartpositioner är förslag; dungeonregler och belöningsvärden är fortsatt öppna. Raritetsnamn, odds, kostnader och skadeskalning är illustrativa. Framtida funktioner i griden är enbart exempel.</p>
+            <details class="history"><summary>Tidigare studier</summary><a target="_top" href="../spell-workspace-v7/?spell=ice&stage=2&view=map">0.21.0 · Namngivna platser i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v12/?study=start">0.20.0 · Idle-overlay & dungeons ↗</a><a target="_top" href="../spell-workspace-v6/?spell=ice&stage=2&view=map">0.19.0 · Dagliga resursvägar i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v11/?nav=B&study=rarity">0.18.0 · Navigation A/B/C & raritetsrisk ↗</a><a target="_top" href="../spell-workspace-v5/?proposal=rarity-risk&spell=frostfire&stage=2&view=map">0.17.0 · Raritetsrisk i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v10/?study=shieldSwarm">0.16.0 · Sköldegenskaper ↗</a><a target="_top" href="../spell-workspace-v4/?proposal=shield-buff&stage=2&view=map">0.15.0 · Sköldegenskaper i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v9/?study=start">0.14.0 · Kompakt mobil & mindre text ↗</a><a target="_top" href="../ui-pixel-idle-v8/?variant=B&study=buffSwarm">0.13.0 · Vald B & Fire Shield ↗</a><a target="_top" href="../spell-workspace-v3/?proposal=shield-buff&stage=2&view=map">0.12.0 · Buff- och sköldförslag ↗</a><a target="_top" href="../ui-pixel-idle-v7/?variant=B&view=active">0.11.0 · Svärmar & konfusion / B vald ↗</a><a target="_top" href="../spell-workspace-v2/?proposal=swarm-cone&stage=3&view=map">0.10.0 · Konfusion i designverktyget ↗</a><a target="_top" href="../ui-pixel-idle-v6/?variant=B">0.9.0 · Lugn avverkning ↗</a><a target="_top" href="../ui-pixel-idle-v5/?variant=B">0.8.0 · Målval, puls & kedja ↗</a><a target="_top" href="../ui-pixel-idle-v4/?variant=B">0.7.0 · Visuell finish & spellcykel ↗</a><a target="_top" href="../ui-pixel-idle-v3/?variant=B">0.6.0 · Mage Power & crest ↗</a><a target="_top" href="../ui-pixel-idle-v2/?variant=B">0.5.0 · Pixel idle v2 / B ↗</a><a target="_top" href="../spell-workspace-v1/?spell=frostfire&stage=4&view=map">0.4.0 · Spellforge designverktyg ↗</a><a target="_top" href="../ui-pixel-idle-v1/?variant=A&art=pixel">0.3.0 · Pixel idle v1 ↗</a><a target="_top" href="../ui-painted-v1/?variant=A&art=fantasy">0.2.0 · Målad fantasy v1 ↗</a><a target="_top" href="../ui-layouts-v1/?variant=A">0.1.0 · Layoutstudier v1 ↗</a></details>
+        </aside>
+    </main>
+    <nav class="prototype-switcher" aria-label="Jämför granskningsscener"><span>B · VALD</span><button id="previous" aria-label="Föregående scen">←</button><b id="variant-label"></b><button id="next" aria-label="Nästa scen">→</button></nav>
+    <script src="rarity-model.js"></script>
+    <script src="dungeon-model.js"></script>
+    <script src="dungeons.js"></script>
+    <script src="navigation.js"></script>
+    <script src="realm-model.js"></script>
+    <script src="world-map.js"></script>
+    <script src="presentation.js"></script>
+    <script src="support-model.js"></script>
+    <script src="activity-model.js"></script>
+    <script src="active-play.js"></script>
+    <script src="swarm-boss.js"></script>
+    <script src="prototype.js"></script>
+</body>
+</html>
